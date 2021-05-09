@@ -1,0 +1,83 @@
+.form {
+    display: flex;
+    height: 100vh;
+    
+    @media only screen and (max-width: 768px) {
+      flex-direction: column;
+    }
+  
+    &-box {
+        margin:auto;
+        width:90%;
+        display: flex;
+        font-size: 5rem;
+        border: 1px solid grey;
+        border-radius: 5px;
+        padding-top:.5rem;
+        background-color: white;
+        
+       
+        &-col1 {
+            width: 35%;
+            display: flex;
+            flex-direction: column;
+            margin:2rem 0;
+            margin-left: 5rem;
+            & .field {
+                margin-bottom: 1.1rem;
+                font-size: 3rem;
+
+            }
+        }
+
+        &-col2 {
+            width:35%;
+            margin:2rem 0;
+            margin-left: 4rem;
+            display: flex;
+            flex-direction: column;
+
+            & .field {
+                margin-bottom: 1.2rem;
+            }
+        }
+        &-col3 {
+            width:35%;
+            margin:2rem 0;
+            margin-left: 4rem;
+            margin-right: 4rem;
+            display: flex;
+            flex-direction: column;
+
+            & .field {
+                margin-bottom: 1.2rem;
+            }
+        }
+    }
+    @media only screen and (max-width: 768px) {
+        &-box {
+            width:100%;
+            flex-direction: column;
+            padding: 15px;
+            border:none;
+
+            &-col1 {
+                width:90%;
+                margin: 0;
+            }
+            &-col2 {
+                width:90%;
+                margin: 0;
+            }
+            &-col3 {
+                width:90%;
+                margin: 0;
+            }
+        }
+    }
+}
+.tax{
+    font-size:1.5rem;
+    margin-top: 2rem;
+    font-weight:bold;
+}
