@@ -32,8 +32,11 @@ connection();
 app.use(express.json());
 app.use(cors());
 
-const itemRoutes = require("./routes/itemRoutes");
-//requests targeting all items - get, post, delete
-app.use("/items/", itemRoutes);
+app.get('/', function (req, res) {
+  res.send('hello world')
+})
+// const itemRoutes = require("./routes/itemRoutes");
+// //requests targeting all items - get, post, delete
+// app.use("/items/", itemRoutes);
 
 app.listen(process.env.PORT || 5000, () => console.log('Server Started'))
