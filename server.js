@@ -36,4 +36,4 @@ const itemRoutes = require("./routes/itemRoutes");
 //requests targeting all items - get, post, delete
 app.use("/items/", itemRoutes);
 
-app.listen(5000, () => console.log('Server Started'))
+app.listen(process.env.PORT || 5000, () => console.log('Server Started'))
