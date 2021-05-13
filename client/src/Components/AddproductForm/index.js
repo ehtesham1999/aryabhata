@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import './AddproductForm.scss'
 
 import UnitData from './UnitData';
@@ -9,48 +9,76 @@ import PrefferedVendor from './PrefferedVendor';
 import Interstate_Taxrates from './Interstate_Taxrates';
 import Intrastate_Taxrates from './Intrastate_Taxrates';
 
-
+import Notification from '../Notification';
 
 import { Formik, Form, Field } from 'formik';
 import { Button, LinearProgress, MenuItem, TextField as TF, FormControlLabel, Checkbox } from '@material-ui/core';
 import { TextField } from 'formik-material-ui';
 import { Autocomplete } from "formik-material-ui-lab";
+import KeyboardBackspaceOutlinedIcon from '@material-ui/icons/KeyboardBackspaceOutlined';
 import axios from "axios";
 
 
-const AddproductForm = () => {
+
+
+const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) => {
     const [sales_checked, setsales] = useState(true)
     const [purchase_checked, setpurchase] = useState(true)
     const [track_inventory_checked, settrackinventory] = useState(false)
+    const [openPopUp,setOpenPopUp]=useState(false)
+    const [isEditData,setIsEditData] = useState(false)
+    const[addbutton_disabled,enable_addbutton]=useState(false)
+    const [notify,setNotify] = useState({isOpen:false,message:'',type:''})
+
+
     const toggle_track = () => settrackinventory(!track_inventory_checked)
     const toggle_sales = () => setsales(!sales_checked)
     const toggle_purchase = () => setpurchase(!purchase_checked)
+    const toggle_addbutton = () => enable_addbutton(!addbutton_disabled)
+
+
+    useEffect(() =>{
+        if(editRecordData!=null){
+            setIsEditData((prev_value)=>(!prev_value))
+        }
+    },[editRecordData])
+    
+
+
+
+    var initialValues={
+
+        type: editRecordData ? editRecordData.type:'',
+        name: editRecordData?editRecordData.name:'',
+        SKU: editRecordData ? editRecordData.SKU:'',
+        unit: editRecordData ? editRecordData.unit:'',
+        HSN_Code: editRecordData ? editRecordData.HSN_Code:'',
+        tax_preference: editRecordData ? editRecordData.tax_preference:'',
+        category: editRecordData?editRecordData.category:'',
+        selling_price: editRecordData ? editRecordData.selling_price:'',
+        sales_account: editRecordData ? editRecordData.sales_account:'',
+        sales_description: editRecordData ? editRecordData.sales_description:'',
+        cost_price: editRecordData ? editRecordData.cost_price:'',
+        purchase_account: editRecordData ? editRecordData.purchase_account:'',
+        purchase_description: editRecordData ? editRecordData.purchase_description:'',
+        intra_tax_rate: editRecordData ? editRecordData.intra_tax_rate:'',
+        inter_tax_rate: editRecordData ? editRecordData.inter_tax_rate:'',
+        opening_stock:editRecordData ? editRecordData.opening_stock:'',
+        reorder_point:editRecordData?editRecordData.reorder_point:'',
+        opening_stock_rateperunit:editRecordData ? editRecordData.opening_stock_rateperunit:'',
+        preferred_vendor:editRecordData? editRecordData.preferred_vendor:'',
+        inventory_account:editRecordData? editRecordData.inventory_account:'',
+
+        editRecord_id:editRecordData?editRecordData._id:'',
+        action:null
+    }
+ 
     return (
         <>
+        
             <Formik
-                initialValues={{
-                    type: '',
-                    name: '',
-                    SKU: '',
-                    unit: '',
-                    HSN_Code: '',
-                    tax_preference: '',
-                    category: '',
-                    selling_price: '',
-                    sales_account: '',
-                    sales_description: '',
-                    cost_price: '',
-                    purchase_account: '',
-                    purchase_description: '',
-                    intra_tax_rate: '',
-                    inter_tax_rate: '',
-                    opening_stock:'',
-                    reorder_point:'',
-                    opening_stock_rateperunit:'',
-                    preferred_vendor:'',
-                    inventory_account:''
-
-                }}
+                initialValues={initialValues}
+                enableReinitialize={true}
                 validate={(values) => {
                     const errors = {};
                     
@@ -79,15 +107,13 @@ const AddproductForm = () => {
                     }
                     return errors;
                 }}
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values, { setSubmitting,resetForm }) => {
                     setTimeout(() => {
                         setSubmitting(false);
-                        console.log(values);
-                        console.log(JSON.stringify(values,null,2))
-                        alert(JSON.stringify(values, null, 2));
-
-
-
+                        resetForm();
+                        console.log(values.editRecord_id)
+                        
+                       if(values.action==='Add'){
                         axios({
                             url:"http://localhost:5000/items/",
                             method:"POST",
@@ -99,14 +125,53 @@ const AddproductForm = () => {
                           })
         
                         .catch((err)=>(console.log(err)))
+                        setNotify({
+                            isOpen:true,
+                            message:"Item Added Successfully",
+                            type:'success'
+                        })
+                       }
+                       else{
+                        axios({
+                            url:"http://localhost:5000/items/" + values.editRecord_id,
+                            method:"PUT",
+                            data:values
+                        })
+                        .then(function(response) {
+                            console.log(response.data);
+                            console.log(response.status);
+                          })
+                        .catch((err)=>(console.log(err)))
+                        setNotify({
+                            isOpen:true,
+                            message:"Item Updated Successfully",
+                            type:'success'
+                        })
+                       }
                     }, 500);
+
+                    // setOpenPopUp(true)
                 }}
             >
-                {({ submitForm, isSubmitting, touched, errors }) => (
+                {({ submitForm, isSubmitting, touched, errors,setFieldValue }) => (
 
 
                     <Form className='form-box'>
                         <div className='form-box-col1'>
+
+                        <Button 
+                        variant="contained" 
+                        color="secondary" 
+                        onClick={()=>{
+                            handleAdditemToggle((prev_value)=>(!prev_value))
+                            axios({
+                                url:"http://localhost:5000/items/",
+                                method:"GET"
+                            })
+                            .then((res)=>{updateProductData(res.data)})
+                            .catch((err)=>(console.log(err)))
+                        }
+                            }> <KeyboardBackspaceOutlinedIcon/> Back</Button>
 
                             <Field
                                 component={TextField}
@@ -454,17 +519,50 @@ const AddproductForm = () => {
                                 </>}
 
 
-                            <Button
+                            {!addbutton_disabled && <Button
                                 className={['field', 'button'].join('')}
                                 variant="contained"
                                 color="primary"
                                 disabled={isSubmitting}
-                                onClick={submitForm}
+                                onClick={(e)=>{
+                                submitForm()
+                                let Action = isEditData ? "Update" : "Add"
+                                setFieldValue("action",Action)
+                                }}
                                 inputProps={{ style: { fontSize: 22 } }}
                                 InputLabelProps={{ style: { fontSize: 22 } }}
                             >
-                                Add Product
-                            </Button>
+                                {isEditData ? "Update Item" : "Add Item"}
+                            </Button>}
+
+                            {isEditData &&<FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={addbutton_disabled}
+                                        onChange={() => toggle_addbutton()}
+                                        color="primary"
+                                    />
+                                }
+                                label="Add This As New Item"
+                            />}
+
+                            {addbutton_disabled &&
+                                <>
+                                <Button
+                                className={['field', 'button'].join('')}
+                                variant="contained"
+                                color="primary"
+                                onClick={(e)=>{
+                                    submitForm()
+                                    setFieldValue("action","Add")
+                                    }}
+                                disabled={isSubmitting}
+                                inputProps={{ style: { fontSize: 22 } }}
+                                InputLabelProps={{ style: { fontSize: 22 } }}
+                            >
+                                Add Item
+                            </Button>    
+                                </>}
 
                         </div>
                     </Form>
@@ -472,6 +570,12 @@ const AddproductForm = () => {
 
                 )}
             </Formik>
+            <Notification
+            notify={notify}
+            setNotify={setNotify}
+            >
+            </Notification>
+          
         </>
     )
 }

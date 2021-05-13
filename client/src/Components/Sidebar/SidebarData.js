@@ -13,7 +13,7 @@ export const SidebarData =[
         iconOpened:<RiIcons.RiArrowUpSFill/>,
         subNav:[
             {
-                title:'Add product',
+                title:'Items',
                 path:'/inventory/addproduct',
                 icon:<GrIcons.GrAdd/>
             },

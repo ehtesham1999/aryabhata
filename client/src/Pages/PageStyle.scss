@@ -1,0 +1,22 @@
+.Table{
+    margin:auto;
+    width:90%;
+    font-size: 5rem;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding-top:.5rem;
+    background-color: white;
+
+    &-head{
+        display:flex;
+        align-items:center;
+        justify-content: space-around;
+        height:5rem;
+        @media only screen and (max-width: 768px) {
+            height:10rem;
+            flex-direction:column;
+            justify-content: space-around;
+            align-items:center;
+        }
+    }
+}
