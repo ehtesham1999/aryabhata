@@ -27,10 +27,8 @@ const connection = async () => {
 
 connection();
 // app.use(express.static(path.join(__dirname, 'client/build')))
-app.use(express.static(path.join(__dirname, '../build')))
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../build'))
-})
+app.use(express.static(path.join(__dirname, 'client/build')))
+
 app.use(express.json());
 app.use(cors());
 // process.env.PWD = process.cwd();
@@ -41,4 +39,7 @@ const itemRoutes = require("./routes/itemRoutes");
 //requests targeting all items - get, post, delete
 app.use("/items/", itemRoutes);
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build/index.html'))
+})
 app.listen(process.env.PORT || 5000, () => console.log('Server Started'))
