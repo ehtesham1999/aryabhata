@@ -35,9 +35,9 @@ process.env.PWD = process.cwd();
 app.get('/', function (req, res) {
   res.send(process.env.PWD)
 })
-
 // const itemRoutes = require("./routes/itemRoutes");
-// //requests targeting all items - get, post, delete
-// app.use("/items/", itemRoutes);
+const itemRoutes = require(process.env.PWD+"/Mern_App/routes/itemRoutes.js");
+//requests targeting all items - get, post, delete
+app.use("/items/", itemRoutes);
 
 app.listen(process.env.PORT || 5000, () => console.log('Server Started'))
