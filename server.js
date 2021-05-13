@@ -36,7 +36,7 @@ app.get('/', function (req, res) {
   res.send(process.env.PWD)
 })
 // const itemRoutes = require("./routes/itemRoutes");
-const itemRoutes = require(process.env.PWD+"/Mern_App/routes/itemRoutes.js");
+const itemRoutes = require("/routes/itemRoutes.js");
 //requests targeting all items - get, post, delete
 app.use("/items/", itemRoutes);
 
