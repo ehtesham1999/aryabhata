@@ -31,10 +31,11 @@ const connection = async () => {
 connection();
 app.use(express.json());
 app.use(cors());
-
+process.env.PWD = process.cwd();
 app.get('/', function (req, res) {
-  res.send('hello world')
+  res.send(process.env.PWD)
 })
+
 // const itemRoutes = require("./routes/itemRoutes");
 // //requests targeting all items - get, post, delete
 // app.use("/items/", itemRoutes);
