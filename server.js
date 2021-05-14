@@ -26,8 +26,6 @@ const connection = async () => {
   };
 
 connection();
-app.use(express.static(path.join(__dirname, 'client/build')))
-app.use(express.static(path.join(__dirname, 'client/build')))
 
 app.use(express.json());
 app.use(cors());
@@ -39,7 +37,11 @@ const itemRoutes = require("./routes/itemRoutes");
 //requests targeting all items - get, post, delete
 app.use("/items/", itemRoutes);
 
+
+app.use(express.static(path.join(__dirname, '../build')))
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build/index.html'))
+    res.sendFile(path.join(__dirname, '../build'))
 })
+
+
 app.listen(process.env.PORT || 5000, () => console.log('Server Started'))
