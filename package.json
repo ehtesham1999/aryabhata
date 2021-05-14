@@ -6,7 +6,6 @@
   "scripts": {
     "start": "nodemon server.js",
     "client": "cd client && npm start",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install npm && run build",
     "mern": "concurrently -n 'server,client' -c 'red,green' \"npm run start\" \"npm run client\""
   },
   "author": "",
