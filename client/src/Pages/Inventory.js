@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import {useHistory} from 'react-router-dom';
+
 
 import AddproductForm from '../Components/AddproductForm';
 import UseTable from '../Components/UseTable';
@@ -20,14 +22,22 @@ import ConfirmDialog from '../Components/ConfirmDialog';
 import Notification from '../Components/Notification';
 
 
+
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+
+import { CSVLink, CSVDownload } from "react-csv";
 import axios from 'axios';
+
+
 const useStyles = makeStyles(theme => ({
     searchInput: {
         width: '75%'
     }
 }))
+
+
 export const Inventory = () => {
     return (
         <div>
@@ -45,12 +55,14 @@ export const AddItem = () => {
     const [recordEdit,setrecordEdit]=useState(null)
     const [confirmDialog,setConfirmDialog]=useState({isOpen:false,title:'',subTitle:''})
     const [notify,setNotify] = useState({isOpen:false,message:'',type:''})
-  
+    
+    const history = useHistory();
 
     const fetchAPI = async () => {
         setProductData(await fetchdata());
+        
     }
-   
+  
     useEffect(() => {
         fetchAPI();
     }, []);
@@ -127,8 +139,7 @@ export const AddItem = () => {
         setrecordEdit(item)
         setAddItem_toggle((prev_value)=>(!prev_value))
     }
-   
-    
+
     return (
         <>
         {additem_toggle ? <AddproductForm editRecordData={recordEdit} handleAdditemToggle={setAddItem_toggle} updateProductData={setProductData} /> 
@@ -153,6 +164,7 @@ export const AddItem = () => {
                 
                 Add New 
                 </Button>
+                
                 </div>
                     
                 
@@ -160,9 +172,12 @@ export const AddItem = () => {
                     <TblHead />
                     <TableBody>
                         {
-                            recordsAfterPagingAndSorting().map(item => (
-                                <TableRow key={item.id}>
-                                    <TableCell>{item.name}</TableCell>
+                            recordsAfterPagingAndSorting().map((item,index) => (
+
+                                
+                                
+                                <TableRow key={index}>
+                                    <TableCell >{item.name} </TableCell>
                                     <TableCell>{item.SKU}</TableCell>
                                     <TableCell>{item.category}</TableCell>
                                     <TableCell>{item.selling_price}</TableCell>
@@ -192,10 +207,19 @@ export const AddItem = () => {
                                                 subTitle:" You can't undo this operation",
                                                 onConfirm:()=>{handleDelete(item._id)}
                                             })
-
-
                                         }}
                                         />
+                                        </Controls.ActionButton>
+
+
+                                        <Controls.ActionButton color="primary">
+                                            <VisibilityIcon fontSize="small"
+                                            onClick={()=>{
+                                                let path = `/inventory/overview/${item._id}`;
+                                                history.push(path); 
+                                            }}
+                                            />
+
                                         </Controls.ActionButton>
 
                                     </TableCell>
@@ -213,14 +237,10 @@ export const AddItem = () => {
             notify={notify}
             setNotify={setNotify}
             >
-            </Notification>
-
-            
+            </Notification>           
             </div>
-            
-            
-        
-                    }
+
+    }
         </>
 
     )
@@ -231,5 +251,7 @@ export const AddCompositeItem = () => {
         <div>form2</div>
     )
 }
+
+
 
 

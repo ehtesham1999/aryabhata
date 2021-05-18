@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import './AddproductForm.scss'
 
 import UnitData from './UnitData';
@@ -16,19 +16,20 @@ import { Button, LinearProgress, MenuItem, TextField as TF, FormControlLabel, Ch
 import { TextField } from 'formik-material-ui';
 import { Autocomplete } from "formik-material-ui-lab";
 import KeyboardBackspaceOutlinedIcon from '@material-ui/icons/KeyboardBackspaceOutlined';
+
 import axios from "axios";
 
 
 
 
-const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) => {
+const AddproductForm = ({ editRecordData, handleAdditemToggle, updateProductData }) => {
     const [sales_checked, setsales] = useState(true)
     const [purchase_checked, setpurchase] = useState(true)
     const [track_inventory_checked, settrackinventory] = useState(false)
-    const [openPopUp,setOpenPopUp]=useState(false)
-    const [isEditData,setIsEditData] = useState(false)
-    const[addbutton_disabled,enable_addbutton]=useState(false)
-    const [notify,setNotify] = useState({isOpen:false,message:'',type:''})
+    const [openPopUp, setOpenPopUp] = useState(false)
+    const [isEditData, setIsEditData] = useState(false)
+    const [addbutton_disabled, enable_addbutton] = useState(false)
+    const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
 
 
     const toggle_track = () => settrackinventory(!track_inventory_checked)
@@ -37,56 +38,57 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
     const toggle_addbutton = () => enable_addbutton(!addbutton_disabled)
 
 
-    useEffect(() =>{
-        if(editRecordData!=null){
-            setIsEditData((prev_value)=>(!prev_value))
+    useEffect(() => {
+        if (editRecordData != null) {
+            setIsEditData((prev_value) => (!prev_value))
         }
-    },[editRecordData])
-    
+    }, [editRecordData])
 
 
 
-    var initialValues={
 
-        type: editRecordData ? editRecordData.type:'',
-        name: editRecordData?editRecordData.name:'',
-        SKU: editRecordData ? editRecordData.SKU:'',
-        unit: editRecordData ? editRecordData.unit:'',
-        HSN_Code: editRecordData ? editRecordData.HSN_Code:'',
-        tax_preference: editRecordData ? editRecordData.tax_preference:'',
-        category: editRecordData?editRecordData.category:'',
-        selling_price: editRecordData ? editRecordData.selling_price:'',
-        sales_account: editRecordData ? editRecordData.sales_account:'',
-        sales_description: editRecordData ? editRecordData.sales_description:'',
-        cost_price: editRecordData ? editRecordData.cost_price:'',
-        purchase_account: editRecordData ? editRecordData.purchase_account:'',
-        purchase_description: editRecordData ? editRecordData.purchase_description:'',
-        intra_tax_rate: editRecordData ? editRecordData.intra_tax_rate:'',
-        inter_tax_rate: editRecordData ? editRecordData.inter_tax_rate:'',
-        opening_stock:editRecordData ? editRecordData.opening_stock:'',
-        reorder_point:editRecordData?editRecordData.reorder_point:'',
-        opening_stock_rateperunit:editRecordData ? editRecordData.opening_stock_rateperunit:'',
-        preferred_vendor:editRecordData? editRecordData.preferred_vendor:'',
-        inventory_account:editRecordData? editRecordData.inventory_account:'',
+    var initialValues = {
 
-        editRecord_id:editRecordData?editRecordData._id:'',
-        action:null
+        type: editRecordData ? editRecordData.type : '',
+        name: editRecordData ? editRecordData.name : '',
+        SKU: editRecordData ? editRecordData.SKU : '',
+        unit: editRecordData ? editRecordData.unit : '',
+        HSN_Code: editRecordData ? editRecordData.HSN_Code : '',
+        tax_preference: editRecordData ? editRecordData.tax_preference : '',
+        category: editRecordData ? editRecordData.category : '',
+        selling_price: editRecordData ? editRecordData.selling_price : '',
+        sales_account: editRecordData ? editRecordData.sales_account : '',
+        sales_description: editRecordData ? editRecordData.sales_description : '',
+        cost_price: editRecordData ? editRecordData.cost_price : '',
+        purchase_account: editRecordData ? editRecordData.purchase_account : '',
+        purchase_description: editRecordData ? editRecordData.purchase_description : '',
+        intra_tax_rate: editRecordData ? editRecordData.intra_tax_rate : '',
+        inter_tax_rate: editRecordData ? editRecordData.inter_tax_rate : '',
+        opening_stock: editRecordData ? editRecordData.opening_stock : '',
+        reorder_point: editRecordData ? editRecordData.reorder_point : '',
+        opening_stock_rateperunit: editRecordData ? editRecordData.opening_stock_rateperunit : '',
+        preferred_vendor: editRecordData ? editRecordData.preferred_vendor : '',
+        inventory_account: editRecordData ? editRecordData.inventory_account : '',
+        bar_code: editRecordData ? editRecordData.bar_code : '',
+
+        editRecord_id: editRecordData ? editRecordData._id : '',
+        action: null
     }
- 
+
     return (
         <>
-        
+
             <Formik
                 initialValues={initialValues}
                 enableReinitialize={true}
                 validate={(values) => {
                     const errors = {};
-                    
+
                     //validation for name
                     if (!values.name) {
                         errors.name = 'Name Required';
                     }
-                    if(!values.SKU){
+                    if (!values.SKU) {
                         errors.SKU = 'SKU required';
                     }
                     //validation for hsn code
@@ -107,71 +109,75 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                     }
                     return errors;
                 }}
-                onSubmit={(values, { setSubmitting,resetForm }) => {
+                onSubmit={(values, { setSubmitting, resetForm }) => {
                     setTimeout(() => {
                         setSubmitting(false);
                         resetForm();
                         console.log(values.editRecord_id)
-                        
-                       if(values.action==='Add'){
-                        axios({
-                            url:"http://localhost:5000/items/",
-                            method:"POST",
-                            data:values
-                        })
-                        .then(function(response) {
-                            console.log(response.data);
-                            console.log(response.status);
-                          })
-        
-                        .catch((err)=>(console.log(err)))
-                        setNotify({
-                            isOpen:true,
-                            message:"Item Added Successfully",
-                            type:'success'
-                        })
-                       }
-                       else{
-                        axios({
-                            url:"http://localhost:5000/items/" + values.editRecord_id,
-                            method:"PUT",
-                            data:values
-                        })
-                        .then(function(response) {
-                            console.log(response.data);
-                            console.log(response.status);
-                          })
-                        .catch((err)=>(console.log(err)))
-                        setNotify({
-                            isOpen:true,
-                            message:"Item Updated Successfully",
-                            type:'success'
-                        })
-                       }
+
+                        if (values.action === 'Add') {
+                            axios({
+                                url: "http://localhost:5000/items/",
+                                method: "POST",
+                                data: values
+                            })
+                                .then(function (response) {
+                                    console.log(response.data);
+                                    console.log(response.status);
+                                })
+
+                                .catch((err) => (console.log(err)))
+                            setNotify({
+                                isOpen: true,
+                                message: "Item Added Successfully",
+                                type: 'success'
+                            })
+                        }
+                        else {
+                            axios({
+                                url: "http://localhost:5000/items/" + values.editRecord_id,
+                                method: "PUT",
+                                data: values
+                            })
+                                .then(function (response) {
+                                    console.log(response.data);
+                                    console.log(response.status);
+                                })
+                                .catch((err) => (console.log(err)))
+                            setNotify({
+                                isOpen: true,
+                                message: "Item Updated Successfully",
+                                type: 'success'
+                            })
+                        }
                     }, 500);
 
                     // setOpenPopUp(true)
                 }}
             >
-                {({ submitForm, isSubmitting, touched, errors,setFieldValue }) => (
+                {({ submitForm, isSubmitting, touched, errors, setFieldValue }) => (
 
 
                     <Form className='form-box'>
                         <div className='form-box-col1'>
 
-                        <Button 
-                        variant="contained" 
-                        color="secondary" 
-                        onClick={()=>{
-                            handleAdditemToggle((prev_value)=>(!prev_value))
-                            axios({
-                                url:"http://localhost:5000/items/",
-                                method:"GET"
-                            })
-                            .then((res)=>{updateProductData(res.data)})
-                            .catch((err)=>(console.log(err)))
-                        }
-                            }> <KeyboardBackspaceOutlinedIcon/> Back</Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => {
+                                    handleAdditemToggle((prev_value) => (!prev_value))
+                                    axios({
+                                        url: "http://localhost:5000/items/",
+                                        method: "GET"
+                                    })
+                                        .then((res) => { updateProductData(res.data) })
+                                        .catch((err) => (console.log(err)))
+                                }
+                                }> <KeyboardBackspaceOutlinedIcon /> Back</Button>
+
+
+
+
 
                             <Field
                                 component={TextField}
@@ -269,7 +275,7 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                     </MenuItem>
                                 ))}
                             </Field>
-                            
+
                             <Field
                                 component={TextField}
                                 type="text"
@@ -288,7 +294,7 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                 <MenuItem value='Non-Taxable'> Non-Taxable</MenuItem>
 
                             </Field>
-                        
+
                         </div>
                         {isSubmitting && <LinearProgress />}
 
@@ -348,7 +354,7 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                         InputLabelProps={{ style: { fontSize: 20 } }}
                                     />
                                 </>}
-                                <Field
+                            <Field
                                 name="HSN_Code"
                                 component={Autocomplete}
                                 options={HSN_CodeData}
@@ -358,7 +364,17 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                     <TF {...params} label="HSN Code" variant="outlined" />
                                 )}
                             />
-                             <p className='tax'>Default Tax Rates</p>
+                            <Field className='field'
+                                component={TextField}
+                                name="bar_code"
+                                type="number"
+                                label="Bar Code"
+                                inputProps={{ style: { fontSize: 20 } }}
+                                InputLabelProps={{ style: { fontSize: 20 } }}
+                            />
+
+
+                            <p className='tax'>Default Tax Rates</p>
                             <Field
                                 component={TextField}
                                 type="text"
@@ -396,7 +412,7 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                 ))}
                             </Field>
 
-                         
+
 
 
                         </div>
@@ -456,7 +472,7 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                 </>}
 
 
-                           
+
 
                             <FormControlLabel
                                 control={
@@ -480,7 +496,7 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                         inputProps={{ style: { fontSize: 25 } }}
                                         InputLabelProps={{ style: { fontSize: 20 } }}
                                     />
-                                     <Field className='field'
+                                    <Field className='field'
                                         component={TextField}
                                         type="number"
                                         label="Reorder Point"
@@ -488,7 +504,7 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                         inputProps={{ style: { fontSize: 25 } }}
                                         InputLabelProps={{ style: { fontSize: 20 } }}
                                     />
-                                     <Field className='field'
+                                    <Field className='field'
                                         component={TextField}
                                         type="number"
                                         label="Opening stock rate per unit item"
@@ -524,10 +540,10 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                 variant="contained"
                                 color="primary"
                                 disabled={isSubmitting}
-                                onClick={(e)=>{
-                                submitForm()
-                                let Action = isEditData ? "Update" : "Add"
-                                setFieldValue("action",Action)
+                                onClick={(e) => {
+                                    submitForm()
+                                    let Action = isEditData ? "Update" : "Add"
+                                    setFieldValue("action", Action)
                                 }}
                                 inputProps={{ style: { fontSize: 22 } }}
                                 InputLabelProps={{ style: { fontSize: 22 } }}
@@ -535,7 +551,7 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                                 {isEditData ? "Update Item" : "Add Item"}
                             </Button>}
 
-                            {isEditData &&<FormControlLabel
+                            {isEditData && <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={addbutton_disabled}
@@ -548,20 +564,20 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
 
                             {addbutton_disabled &&
                                 <>
-                                <Button
-                                className={['field', 'button'].join('')}
-                                variant="contained"
-                                color="primary"
-                                onClick={(e)=>{
-                                    submitForm()
-                                    setFieldValue("action","Add")
-                                    }}
-                                disabled={isSubmitting}
-                                inputProps={{ style: { fontSize: 22 } }}
-                                InputLabelProps={{ style: { fontSize: 22 } }}
-                            >
-                                Add Item
-                            </Button>    
+                                    <Button
+                                        className={['field', 'button'].join('')}
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={(e) => {
+                                            submitForm()
+                                            setFieldValue("action", "Add")
+                                        }}
+                                        disabled={isSubmitting}
+                                        inputProps={{ style: { fontSize: 22 } }}
+                                        InputLabelProps={{ style: { fontSize: 22 } }}
+                                    >
+                                        Add Item
+                            </Button>
                                 </>}
 
                         </div>
@@ -571,11 +587,11 @@ const AddproductForm = ({editRecordData,handleAdditemToggle,updateProductData}) 
                 )}
             </Formik>
             <Notification
-            notify={notify}
-            setNotify={setNotify}
+                notify={notify}
+                setNotify={setNotify}
             >
             </Notification>
-          
+
         </>
     )
 }

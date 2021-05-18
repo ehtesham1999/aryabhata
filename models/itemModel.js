@@ -20,6 +20,7 @@ const itemSchema = new mongoose.Schema({
   opening_stock_rateperunit: Number,
   preferred_vendor: String,
   inventory_account: String,
+  bar_code: Number,
   //trackInventory: Boolean
 });
 
