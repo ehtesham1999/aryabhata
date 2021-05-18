@@ -52,14 +52,14 @@ const showSidebar = () => setSidebar(!sidebar)
                 <FaIcons.FaBars onClick={showSidebar}/>
             </NavIcon>
         </Nav>
-        <SidebarNav sidebar={sidebar}>
+        <SidebarNav sidebar={sidebar} >
             <SidebarWrap>
                 <NavIcon to='#'>
                 <AiIcons.AiOutlineClose onClick={showSidebar}/>
                 </NavIcon>
                 {SidebarData.map((items,index)=>{
                     return (
-                        <SubMenu item={items} key={index}/>
+                        <SubMenu item={items} key={index} />
                     ) 
                 })}
             </SidebarWrap>

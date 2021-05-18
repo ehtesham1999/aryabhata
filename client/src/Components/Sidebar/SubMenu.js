@@ -48,7 +48,7 @@ const SubMenu = ({ item }) => {
     <IconContext.Provider value={{color:'#fff'}}>
 
     
-      <SidebarLink to={item.path} onClick={item.subNav && showSubnav}>
+      <SidebarLink to={item.path} onClick={item.subNav && showSubnav} >
         <div>
           {item.icon}
           <SidebarLabel>{item.title}</SidebarLabel>
