@@ -50,28 +50,29 @@ const DisplayItem = () => {
             <div className='box-boxcol'>
 
             <div className='box-col1'>
-                <p>Item Type :{item.type}</p>
-                <p>SKU :{item.SKU}</p>
-                <p>Unit: {item.unit}</p>
-                <p>Category: {item.category}</p>
-                <p>Tax Preference: {item.tax_preference}</p>
-                <p>Intra State Tax Rate: {item.intra_tax_rate}</p>
-                <p>Inter State Tax Rate: {item.inter_tax_rate}</p>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Item Type :</p><p>{item.type}</p></div>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>SKU :</p><p>{item.SKU}</p></div>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Unit:</p><p> {item.unit}</p></div>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Category:</p><p> {item.category}</p></div>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Tax Preference:</p><p> {item.tax_preference}</p></div>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Intra State Tax Rate:</p><p> {item.intra_tax_rate}</p></div>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Inter State Tax Rate:</p><p> {item.inter_tax_rate}</p></div>
             </div>
 
             <div className='box-col2'>
                 <p className='box-col2-headings'>Purchase Information</p>
-                <p>Cost Price : {item.cost_price}  </p>
-                <p>Purchase Account: {item.purchase_account}</p>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Cost Price : </p><p>{item.cost_price}  </p></div>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Purchase Account:</p><p> {item.purchase_account}</p></div>
 
                 <p className='box-col2-headings'>Sales Information</p>
-                <p>Selling Price : {item.selling_price}  </p>
-                <p>Sales Account: {item.sales_account}</p>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Selling Price :</p><p> {item.selling_price}  </p></div>
+                <div className='box-boxcol-row'><p className='box-boxcol-head'>Sales Account: </p><p>{item.sales_account}</p></div>
 
-                <Controls.Button color="secondary" style={{maxWidth: '400px', maxHeight: '0px', minWidth: '30px', minHeight: '30px'}}
+                <Controls.Button color="secondary" 
                 text='Back'
                  onClick={()=>{history.goBack()}}
                 >Back</Controls.Button>
+
 
             </div>
             </div>

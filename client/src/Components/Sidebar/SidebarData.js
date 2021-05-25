@@ -1,28 +1,38 @@
 import React from 'react'
 import * as FaIcons from 'react-icons/fa'
 import * as AiIcons from 'react-icons/ai'
-import * as IoIcons from 'react-icons/io'
+import * as IoIcons from 'react-icons/io5'
 import * as RiIcons from 'react-icons/ri'
 import * as GrIcons from 'react-icons/gr'
 export const SidebarData =[
     {
         title:'Inventory',
-        path:'/inventory',
-        icon:<GrIcons.GrStorage/>,
+        path:"inventory",
+        icon:<IoIcons.IoBagHandleSharp/>,
         iconClosed:<RiIcons.RiArrowDownSFill/>,
         iconOpened:<RiIcons.RiArrowUpSFill/>,
         subNav:[
             {
-                title:'Items',
+                title:' Add Product',
                 path:'/inventory/addproduct',
-                icon:<GrIcons.GrAdd/>
+                icon:<IoIcons.IoBagAdd/>
             },
-            {
-                title:'Composite product',
-                path:'/inventory/compositeproduct',
-                icon:<GrIcons.GrAdd/>
-            },
+        ]
 
+    },
+
+    {
+        title:'Sales',
+        path:'sales',
+        icon:<RiIcons.RiShoppingCartFill/>,
+        iconClosed:<RiIcons.RiArrowDownSFill/>,
+        iconOpened:<RiIcons.RiArrowUpSFill/>,
+        subNav:[
+            {
+                title:'Add Customer',
+                path:'/sales/addcustomer',
+                icon:<AiIcons.AiOutlineUserAdd/>
+            },
         ]
 
     }
