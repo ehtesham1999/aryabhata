@@ -1,29 +1,28 @@
-require('dotenv').config()
+require("dotenv").config();
 
-const express = require('express')
-const app = express()
-const path = require('path')
-const cors = require("cors");
-const mongoose = require('mongoose');
-const { connect } = require('./routes/itemRoutes');
-
-//frf
+const express = require("express");
+const app = express();
+const path = require("path");
+const cors = require('cors');
+const mongoose = require("mongoose");
+// frf
 const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: true,
-}
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: true,
+};
 
 const connection = async () => {
-    const url = 'mongodb+srv://admin_ehte:test@cluster0.tmjbb.mongodb.net/test?retryWrites=true&w=majority' ;
-  
-    try {
-      await mongoose.connect(url, options);
-      console.log("DB Connected Successfully");
-    } catch (error) {
-      console.log("DB Connection Failed");
-    }
-  };
+  const url =
+    'mongodb+srv://admin_ehte:test@cluster0.tmjbb.mongodb.net/test?retryWrites=true&w=majority';
+
+  try {
+    await mongoose.connect(url, options);
+    console.log('DB Connected Successfully');
+  } catch (error) {
+    console.log('DB Connection Failed');
+  }
+};
 
 connection();
 
@@ -33,15 +32,16 @@ app.use(cors());
 // app.get('/', function (req, res) {
 //   res.send(process.env.PWD)
 // })
-const itemRoutes = require("./routes/itemRoutes");
-//requests targeting all items - get, post, delete
-app.use("/items/", itemRoutes);
+const itemRoutes = require('./routes/itemRoutes');
+const customerRoutes = require('./routes/customerRoutes');
 
+// requests targeting all items - get, post, delete
+app.use('/items/', itemRoutes);
+app.use('/customers/', customerRoutes);
 
-app.use(express.static(path.join(__dirname, '/client/build')))
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/client/build'))
-})
+// app.use(express.static(path.join(__dirname, "/client/build")));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, '/client/build'));
+// });
 
-
-app.listen(process.env.PORT || 5000, () => console.log('Server Started'))
+app.listen(process.env.PORT || 5000, () => console.log("Server Started"));

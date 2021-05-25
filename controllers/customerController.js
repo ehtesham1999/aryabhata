@@ -1,37 +1,38 @@
-const Item = require("../models/itemModel");
+const Customer = require("../models/customerModel");
 const ObjectId = require("mongodb").ObjectID;
 module.exports = {
-  testItems: async (req, res) => {
+  testCustomers: async (req, res) => {
     try {
-      //to test the connection
       res.status(201).json({ message: "success connection to api" });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   },
-  getAllItems: async (req, res) => {
+  getAllCustomers: async (req, res) => {
     try {
-      const items = await Item.find();
-      console.log(items);
-      res.status(201).json(items);
+      const customers = await Customer.find();
+      console.log(customers);
+      res.status(201).json(customers);
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   },
 
-  addItem: async (req, res) => {
-    const newitem = new Item(req.body);
+  addCustomer: async (req, res) => {
+    console.log(req.body);
+    const newcustomer = new Customer(req.body);
+    
     try {
-      const newItem = await newitem.save();
-      res.status(201).json(newItem);
+      const newCustomer = await newcustomer.save();
+      res.status(201).json(newCustomer);
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
   },
 
-  updateItem: async (req, res) => {
+  updateCustomer: async (req, res) => {
     try {
-      const updatedItem = await Item.findOneAndUpdate(
+      const updatedCustomer = await Customer.findOneAndUpdate(
         {
           _id: req.params.id,
         },
@@ -43,47 +44,47 @@ module.exports = {
           useFindAndModify: false,
         }
       );
-      res.status(201).json(updatedItem);
+      res.status(201).json(updatedCustomer);
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
   },
 
-  patchItem: async (req, res) => {
+  patchCustomer: async (req, res) => {
     try {
       const updateObject = req.body; // {last_name : "smith", age: 44}
       const id = req.params.id;
-      const updatedItem = await Item.updateOne(
+      const updatedCustomer = await Customer.updateOne(
           {_id: ObjectId(id)},
           {$set: updateObject},
       );
-      res.status(201).json(updatedItem);
+      res.status(201).json(updatedCustomer);
     } catch (err) {
       res.status(400).json({message: err.message});
     }
   },
 
-  deleteItem: async (req, res) => {
+  deleteCustomer: async (req, res) => {
     try {
-      await res.item.remove();
-      res.status(200).json({ message: "Deleted Item" });
+      await res.customer.remove();
+      res.status(200).json({ message: "Deleted Customer" });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   },
 
-  getItem: async (req, res, next) => {
-    let item;
+  getCustomer: async (req, res, next) => {
+    let customer;
     try {
-      item = await Item.findById(req.params.id);
-      if (item == null) {
-        return res.status(404).json({ message: "Cannot find Item" });
+      customer = await Customer.findById(req.params.id);
+      if (customer == null) {
+        return res.status(404).json({ message: "Cannot find Customer" });
       }
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }
 
-    res.item = item;
+    res.customer = customer;
     next();
   },
 };

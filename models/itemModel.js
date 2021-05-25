@@ -24,5 +24,5 @@ const itemSchema = new mongoose.Schema({
   //trackInventory: Boolean
 });
 
-let ItemModel = mongoose.model("Items", itemSchema);
-module.exports = ItemModel
+let itemModel = mongoose.model("items", itemSchema);
+module.exports = itemModel
