@@ -3,6 +3,7 @@ import {useHistory} from 'react-router-dom';
 
 
 import AddproductForm from '../Components/AddproductForm';
+
 import UseTable from '../Components/UseTable';
 import { fetchdata } from '../Api';
 import '../Pages/PageStyle.scss';
@@ -37,14 +38,6 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-
-export const Inventory = () => {
-    return (
-        <div>
-            <h1>inventory</h1>
-        </div>
-    )
-}
 
 export const AddItem = () => {
     const classes = useStyles();
@@ -167,7 +160,6 @@ export const AddItem = () => {
                 
                 </div>
                     
-                
                 <TblContainer>
                     <TblHead />
                     <TableBody>
@@ -246,11 +238,7 @@ export const AddItem = () => {
     )
 }
 
-export const AddCompositeItem = () => {
-    return (
-        <div>form2</div>
-    )
-}
+
 
 
 

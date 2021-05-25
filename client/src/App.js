@@ -6,17 +6,17 @@ import React from 'react'
 import DisplayItem from './Components/DisplayItem'
 
 
-import {AddCompositeItem, Inventory, AddItem } from './Pages/Inventory';
+import {AddItem} from './Pages/Inventory';
+import {AddCustomer} from './Pages/Sales'
 
 function App() {
   return (
     <Router>
       <Sidebar/>
       <Switch>
-        <Route path ='/inventory' exact component={Inventory}/>
         <Route path='/inventory/addproduct' exact component={AddItem}/>
-        <Route path='/inventory/compositeproduct' exact component={AddCompositeItem}/>
         <Route path='/inventory/overview/:id' exact component={DisplayItem}/>
+        <Route path='/sales/addcustomer' exact component= {AddCustomer}/>
       </Switch>
     </Router>
     
