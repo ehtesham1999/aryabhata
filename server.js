@@ -34,10 +34,14 @@ app.use(cors());
 // })
 const itemRoutes = require('./routes/itemRoutes');
 const customerRoutes = require('./routes/customerRoutes');
+const invoiceRoutes = require('./routes/invoiceRoutes');
+
 
 // requests targeting all items - get, post, delete
 app.use('/items/', itemRoutes);
 app.use('/customers/', customerRoutes);
+app.use('/invoice/', invoiceRoutes);
+
 
 // app.use(express.static(path.join(__dirname, "/client/build")));
 // app.get("*", (req, res) => {
