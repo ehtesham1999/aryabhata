@@ -359,9 +359,9 @@ const AddproductForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                 component={Autocomplete}
                                 options={HSN_CodeData}
                                 getOptionLabel={(option) => option}
-                                style={{ width: 300 }}
+                                style={{ width: 525 }}
                                 renderInput={(params) => (
-                                    <TF {...params} label="HSN Code" variant="outlined" />
+                                    <TF {...params} label="HSN Code" variant="standard" />
                                 )}
                             />
                             <Field className='field'
