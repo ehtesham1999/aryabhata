@@ -207,7 +207,7 @@ export const AddItem = () => {
                                         <Controls.ActionButton color="primary">
                                             <VisibilityIcon fontSize="small"
                                             onClick={()=>{
-                                                let path = `/inventory/overview/${item._id}`;
+                                                let path = `/inventory/product/overview/${item._id}`;
                                                 history.push(path); 
                                             }}
                                             />

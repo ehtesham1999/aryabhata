@@ -92,6 +92,9 @@ const itemSchema = new mongoose.Schema({
     },
     "payment_terms": {
       "type": "String"
+    },
+    "gstin_uni":{
+      "type":"Number"
     }
   });
 

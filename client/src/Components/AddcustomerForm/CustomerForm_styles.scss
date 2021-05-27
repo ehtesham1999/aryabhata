@@ -57,9 +57,11 @@
         }
         &-col3{
             display: flex;
+            flex-direction: column;
             width:33.33%;
-            align-items:center;
-            justify-content: center;
+            align-items: center;
+            justify-content:center;
+         
         }
         
     }
@@ -81,6 +83,7 @@
             flex-direction: column;
             margin:3.5rem 0;
             margin-left: 5rem;
+            
             & .field {
                 margin-bottom: 1.1rem;
                 font-size: 3rem;
@@ -179,4 +182,9 @@
 .same-row{
     display: flex;
     justify-content:space-between;
+}
+
+
+.lp-copy-sel{
+    white-space:pre-wrap !important;
 }
