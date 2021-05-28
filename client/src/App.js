@@ -8,7 +8,7 @@ import DisplayCustomer from './Components/DisplayCustomer'
 
 
 import {AddItem} from './Pages/Inventory';
-import {AddCustomer} from './Pages/Sales'
+import {AddCustomer,AddInvoice} from './Pages/Sales';
 
 function App() {
   return (
@@ -19,6 +19,8 @@ function App() {
         <Route path='/inventory/product/overview/:id' exact component={DisplayItem}/>
 
         <Route path='/sales/addcustomer' exact component= {AddCustomer}/>
+        <Route path='/sales/addinvoice' exact component= {AddInvoice}/>
+          
         <Route path='/sales/customer/overview/:id' exact component={DisplayCustomer}/>
       </Switch>
     </Router>

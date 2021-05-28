@@ -3,6 +3,7 @@ import {useHistory} from 'react-router-dom';
 
 import '../Pages/PageStyle.scss';
 import AddcustomerForm from '../Components/AddcustomerForm'
+import AddInvoiceForm from '../Components/AddInvoiceForm'
 
 import UseTable from '../Components/UseTable';
 import { fetchcustomerdata } from '../Api';
@@ -232,6 +233,15 @@ export const AddCustomer = () => {
     }
         </>
 
+    )
+}
+
+export const AddInvoice = () => {
+
+    return (
+       
+        <AddInvoiceForm />
+        
     )
 }
   
