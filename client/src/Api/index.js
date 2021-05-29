@@ -29,6 +29,22 @@ export const fetchcustomerdata = async () => {
 
 }
 
+export const fetchcustomernames = async () => {
+    try{
+        const data=await axios.get(url2)
+        console.log(data)
+        const names=[]
+        for(let i=0;i<data.data.length;i++){
+            names.push(data.data[i].display_name)
+        }
+        return names;
+    }
+    catch(error){
+        console.log(error)
+    }
+
+}
+
 export const fetchitem = async (id) => {
     try{
         console.log(id)

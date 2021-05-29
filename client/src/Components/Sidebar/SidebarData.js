@@ -33,6 +33,11 @@ export const SidebarData =[
                 path:'/sales/addcustomer',
                 icon:<AiIcons.AiOutlineUserAdd/>
             },
+            {
+                title:'Invoices',
+                path:'/sales/addinvoice',
+                icon:<AiIcons.AiOutlineForm/>
+            }
         ]
 
     }
