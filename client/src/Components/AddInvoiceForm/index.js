@@ -5,10 +5,13 @@ import { fetchcustomernames } from '../../Api'
 import { useHistory } from 'react-router-dom';
 import {
     MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-    DatePicker
 } from "@material-ui/pickers";
+
+import {
+    TimePicker,
+    DatePicker,
+    DateTimePicker,
+} from 'formik-material-ui-pickers';
 import DateFnsUtils from "@date-io/date-fns";
 // import UnitData from './UnitData';
 // import HSN_CodeData from './HSN_CodeData';
@@ -17,6 +20,7 @@ import DateFnsUtils from "@date-io/date-fns";
 // import PrefferedVendor from './PrefferedVendor';
 // import Interstate_Taxrates from './Interstate_Taxrates';
 // import Intrastate_Taxrates from './Intrastate_Taxrates';
+import TermsData from './TermsData';
 
 import Notification from '../Notification';
 
@@ -58,7 +62,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
 
     const fetchAPI = async () => {
         setCustomerData(await fetchcustomernames());
-       
+
     }
 
     useEffect(() => {
@@ -74,9 +78,9 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
         customer_name: editRecordData ? editRecordData.customer_name : '',
         invoice_number: editRecordData ? editRecordData.invoice_number : '',
         order_number: editRecordData ? editRecordData.order_number : '',
-        invoice_date: editRecordData ? editRecordData.invoice_date : '',
+        invoice_date: editRecordData ? editRecordData.invoice_date : new Date(),
         invoice_terms: editRecordData ? editRecordData.invoice_terms : '',
-        invoice_due_date: editRecordData ? editRecordData.invoice_due_date : '',
+        invoice_due_date: editRecordData ? editRecordData.invoice_due_date : new Date(),
 
 
 
@@ -145,136 +149,148 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                 }}
             >
                 {({ submitForm, isSubmitting, touched, errors, setFieldValue, values }) => (
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <Form className='form-box'>
+                            <div className='form-box-col1'>
 
+                                <Button
+                                    variant="contained"
+                                    className='margin-bottom'
+                                    color="secondary"
+                                // onClick={() => {
+                                //     handleAdditemToggle((prev_value) => (!prev_value))
+                                //     axios({
+                                //         url: "http://localhost:5000/items/",
+                                //         method: "GET"
+                                //     })
+                                //         .then((res) => { updateProductData(res.data) })
+                                //         .catch((err) => (console.log(err)))
+                                // }}
+                                > <KeyboardBackspaceOutlinedIcon /> Back</Button>
 
-                    <Form className='form-box'>
-                        <div className='form-box-col1'>
-
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                            // onClick={() => {
-                            //     handleAdditemToggle((prev_value) => (!prev_value))
-                            //     axios({
-                            //         url: "http://localhost:5000/items/",
-                            //         method: "GET"
-                            //     })
-                            //         .then((res) => { updateProductData(res.data) })
-                            //         .catch((err) => (console.log(err)))
-                            // }}
-                            > <KeyboardBackspaceOutlinedIcon /> Back</Button>
-
-
-
-
-
-
-
-                            <Field
-                                name="customer_name"
-                                component={Autocomplete}
-                                options={customer_data}
-                                getOptionLabel={(option) => option}
-
-
-                                renderInput={(params) => (
-
-                                    <TF {...params} label="Customer Name" variant="standard" helperText='Select Customer' />
-
-                                )}
-                            />
-                            <Button
-
-                                variant="contained"
-                                color="primary"
-
-                                onClick={(e) => {
-
-                                    const path = '/sales/addcustomer'
-                                    history.push(path)
-                                }}
-                                startIcon={<AddIcon />}
-                            >
-                                New Customer
-                            </Button>
+                                <Field
+                                    
+                                    name="customer_name"
+                                    component={Autocomplete}
+                                    options={customer_data}
+                                    getOptionLabel={(option) => option}
 
 
 
+                                    renderInput={(params) => (
 
+                                        <TF {...params} 
+                                        inputprops={{ style: { fontSize: 20 } }}
+                                        InputLabelProps={{ style: { fontSize: 20 } }} 
+                                        className='field'
+                                        label="Customer Name" 
+                                        variant="standard" 
+                                        helperText='Select Customer' />
 
-
-                        </div>
-                        {isSubmitting && <LinearProgress />}
-
-                        <div className='form-box-col2'>
-
-                            <Field className='field'
-                                component={TextField}
-                                type="number"
-                                label="Invoice Number"
-                                name="invoice_number"
-                                inputProps={{ style: { fontSize: 25 } }}
-                                InputLabelProps={{ style: { fontSize: 20 } }}
-                            />
-
-                           
-                              
-                           
-
-
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <DatePicker
-                               
+                                    )}
+                                />
+                                <Button
                                    
-                                    value={values.invoice_date}
-                                    placeholder="dd/mm/yyyy"
-                                    onChange={date => setFieldValue('invoice_date',date)}
-                                    minDate={new Date()}></DatePicker>
-                                    
-                           
-                           
-                            </MuiPickersUtilsProvider>
+                                
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={(e) => {
+                                        const path = '/sales/addcustomer'
+                                        history.push(path)
+                                    }}
+                                    startIcon={<AddIcon />}
+                                >
+                                    New Customer
+                                </Button>
+
+                                <Field className='field'
+                                    component={TextField}
+                                    type="text"
+                                    label="Order Number"
+                                    name="order_number"
+                                    inputProps={{ style: { fontSize: 20 } }}
+                                    InputLabelProps={{ style: { fontSize: 20 } }}
+                                />
+
+                            
+
+                                
 
 
-                               {/* <KeyboardDatePicker
-                                    clearable
-                                    value={values.invoice_due_date}
-                                    placeholder="dd/mm/yyyy"
-                                    onChange={date => setFieldValue('invoice_due_date',date)}
+                            </div>
+                            {isSubmitting && <LinearProgress />}
+
+                            <div className='form-box-col2'>
+
+                                <Field className='field'
+                                    component={TextField}
+                                    type="text"
+                                    label="Invoice Number"
+                                    name="invoice_number"
+                                    className='field'
+                                    inputProps={{ style: { fontSize: 20 } }}
+                                    InputLabelProps={{ style: { fontSize: 20 } }}
+                                />
+
+                                <Field className='field'
+                                    component={DatePicker}
+                                    name="invoice_date"
+                                    className='field'
+                                    label="Invoice Date"
                                     minDate={new Date()}
-                                    
-                                /> */}
+                                    inputProps={{ style: { fontSize: 20 } }}
+                                    InputLabelProps={{ style: { fontSize: 20 } }}
+                                />
+                                <Field className='field'
+                                    component={DatePicker}
+                                    name="invoice_due_date"
+                                    label="Due Date"
+                                    className='field'
+                                    minDate={new Date()}
+                                    inputProps={{ style: { fontSize: 20 } }}
+                                    InputLabelProps={{ style: { fontSize: 20 } }}
+                                />
+                                    <Field
+                                    component={TextField}
+                                    type="text"
+                                    label='Terms'
+                                    name='invoice_terms'
+                                    className='field'
+                                    select
+                                    inputProps={{ style: { fontSize: 20 } }}
+                                    InputLabelProps={{ style: { fontSize: 20 } }}>
+
+                                    {TermsData.map((data, index) => (
+                                        <MenuItem key={index} value={data}>
+                                            {data}
+                                        </MenuItem>
+                                    ))}
+                                    </Field>
+
+                            </div>
+                            <div className='form-box-col3'>
 
 
-
-
-
-
-
-
-
-                        </div>
-                        <div className='form-box-col3'>
-
-
-                            <Button
-                                className={['field', 'button'].join('')}
-                                variant="contained"
-                                color="primary"
-                                onClick={(e) => {
-                                    submitForm()
-                                    // setFieldValue("action", "Add")
-                                }}
-                                disabled={isSubmitting}
-                                inputProps={{ style: { fontSize: 22 } }}
-                                InputLabelProps={{ style: { fontSize: 22 } }}
-                            >
-                                Add Invoice
+                                <Button
+                                    className={['field', 'button'].join('')}
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={(e) => {
+                                        submitForm()
+                                        // setFieldValue("action", "Add")
+                                    }}
+                                    disabled={isSubmitting}
+                                    inputProps={{ style: { fontSize: 22 } }}
+                                    InputLabelProps={{ style: { fontSize: 22 } }}
+                                >
+                                    Add Invoice
                             </Button>
 
 
-                        </div>
-                    </Form>
+                            </div>
+                        </Form>
+                    </MuiPickersUtilsProvider>
+
 
 
                 )}

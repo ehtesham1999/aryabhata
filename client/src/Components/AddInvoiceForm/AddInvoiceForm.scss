@@ -25,9 +25,12 @@
             margin:2rem 0;
             margin-left: 5rem;
             & .field {
-                margin-bottom: 1.1rem;
+                margin-bottom: 2rem;
                 font-size: 3rem;
 
+            }
+            & Button {
+                margin-bottom:2rem;
             }
         }
 
