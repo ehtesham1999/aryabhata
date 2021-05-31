@@ -622,7 +622,7 @@ const AddcustomerForm = ({ editRecordData, handleAddCustomerToggle, updateCustom
                             <div className="form-box2-col1">
 
 
-                            <Field
+                            {values.gst_treatment!=='Overseas' && <Field
                                 name="place_of_supply"
                                 component={Autocomplete}
                                 options={place_of_supply}
@@ -631,7 +631,7 @@ const AddcustomerForm = ({ editRecordData, handleAddCustomerToggle, updateCustom
                                 renderInput={(params) => (
                                     <TF {...params} label="Place of supply" variant="standard" />
                                 )}
-                            />
+                            />}
 
 
                                 <Field
@@ -651,6 +651,10 @@ const AddcustomerForm = ({ editRecordData, handleAddCustomerToggle, updateCustom
 
                                 </Field>
 
+                                {values.gst_treatment && 
+                                values.gst_treatment!=='Consumer' && 
+                                values.gst_treatment!=='Unregistered Business' && 
+                                values.gst_treatment!=='Overseas' ? 
                                 <Field
                                     component={TextField}
                                     type="number"
@@ -661,7 +665,7 @@ const AddcustomerForm = ({ editRecordData, handleAddCustomerToggle, updateCustom
                                     margin="normal"
                                     inputProps={{ style: { fontSize: 18 } }} // font size of input text
                                     InputLabelProps={{ style: { fontSize: 18 } }} // font size of input label
-                                />
+                                />:null}
 
 
                             </div>
