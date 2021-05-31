@@ -1,41 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './App.css';
 import MaterialTable from 'material-table'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import  Icons  from './tableIcons';
 import { setQuarter } from 'date-fns';
+import { fetchdata } from '../../Api'
+
+
 
 
 const itemList = [
-  { id: 1, item_name: "Jeera", qty: 2 , rate: 12, tax: 'GST' , amt : 500},
-  { id: 2, item_name: "Potato", qty: 3 , rate: 12, tax: 'GST' , amt : 500},
-  { id: 3, item_name: "Rice", qty: 4 , rate: 12, tax: 'GST' , amt : 500},
-  { id: 4, item_name: "Flour", qty: 5 , rate: 12, tax: 'GST' , amt : 500},
-  { id: 5, item_name: "Seeds", qty: 6 , rate: 12, tax: 'GST' , amt : 500}
+  
 ]
 
 
-const itemDetails = [
-    {  item_name: "Jeera",  rate: 12 },
-    {  item_name: "Potato",  rate: 24 },
-    {  item_name: "Rajma",  rate: 15 },
-    {  item_name: "Banana",  rate: 15 },
-    {  item_name: "Apples",  rate: 17 },
-  ]
 
-const itemNames = [{item_name : "Jeera"},
-                {item_name : "Dahi"},
-                {item_name : "Wheat"},
-                {item_name : "Rajma"},
-                {item_name : "Apples"},
-                ]
-
-const taxTypeNames = [{type: "Non-Taxable"},{type : "GST"},{type:"VAT"},{type:"SGST"}]
 
   
 
 const AddInvoiceTable = () => {
+
+  const [item_data, setItemData] = useState([])
+    
+  const fetchAPI = async () => {
+    await fetchdata().then(
+      (data)=>{
+        setItemData(data);
+        console.log('Data loaded from useEffect');
+        console.log(data);
+      }
+    );
+    
+
+    }
+
+    useEffect(() => {
+        fetchAPI()
+    }, []);
+
+
 
   const [data, setData] = useState(itemList);
   const [itemName , setItemName] = useState("");
@@ -53,12 +57,12 @@ const AddInvoiceTable = () => {
         id="item_box"
         value={itemName}
         onChange={(event, newValue) => {
-            setItemName(newValue);
-            console.log('Rate : '+newValue.rate);
-            setRate(newValue.rate)
+
+            setItemName(newValue.name);
+            setRate(newValue.selling_price)
         }}
-        options={itemDetails}
-        getOptionLabel= {(option) => option.item_name?option.item_name : ""}
+        options={item_data}
+        getOptionLabel= {(option) => option.name?option.name : ""}
         style={{ width: 300 }}
         renderInput={(params) => <TextField {...params} label="Item Name" variant="outlined" />}
         />
@@ -67,9 +71,9 @@ const AddInvoiceTable = () => {
         <TextField
           value={itemQuantity}
           onChange={(event, newValue) => {
-            setQuantity(newValue);
-            console.log('Quantity: '+newValue);
-            // setAmount(itemRate*newValue);
+            setQuantity(event.target.value);
+            console.log('Quantity: '+event.target.value);
+            setAmount(itemRate*event.target.value);
             }}
           type="numeric"
         />
@@ -77,9 +81,9 @@ const AddInvoiceTable = () => {
     { title: "Rate", field: 'rate' , editComponent: () => (
         <TextField
           value={itemRate}
-          onChange={(event, newValue) => {
-            setRate(newValue);
-        }}
+        //   onChange={(event, newValue) => {
+        //     setRate(newValue);
+        // }}
           type="numeric"
         />
       ) },
@@ -88,10 +92,10 @@ const AddInvoiceTable = () => {
         id="tax_box"
         value={taxType}
         onChange={(event, newValue) => {
-            setTaxType(newValue);
+            setTaxType(newValue.tax_preference);
         }}
-        options={taxTypeNames}
-        getOptionLabel= {(option) => option.type ? option.type : ""}
+        options={item_data}
+        getOptionLabel= {(option) => option.tax_preference ? option.tax_preference : ""}
         style={{ width: 300 }}
         renderInput={(params) => <TextField {...params} label="Tax Type" variant="outlined" />}
         />
@@ -111,8 +115,6 @@ const AddInvoiceTable = () => {
 
   return (
     <div className="App">
-      {/* <h1 align="center">React-App</h1>
-      <h4 align='center'>Material Table with CRUD operation</h4> */}
       <MaterialTable
         icons={Icons}
         title="Add Items"
@@ -120,14 +122,13 @@ const AddInvoiceTable = () => {
         columns={columns}
         editable={{
           onRowAdd: (newRow) => new Promise((resolve, reject) => {
-            // console.log({ id: Math.floor(Math.random() * 100),itemName,...newRow });
-            
-            const itemToAdd = itemName.item_name;
-            const rateToAdd = itemName.rate;
-            const taxToAdd = taxType.type;
-            const amountToAdd = newRow.qty*rateToAdd;
+            const itemToAdd = itemName;
+            const rateToAdd = itemRate;
+            const taxToAdd = taxType;
+            const amountToAdd = itemQuantity*rateToAdd;
+            const quantityToAdd = itemQuantity;
         
-            let newAppendRow = { id: Math.floor(Math.random() * 100) , item_name : itemToAdd, rate : rateToAdd , amt : amountToAdd ,tax: taxToAdd , ...newRow }
+            let newAppendRow = { id: Math.floor(Math.random() * 100) , item_name : itemToAdd, rate : rateToAdd , amt : amountToAdd ,tax: taxToAdd ,qty: quantityToAdd , ...newRow }
             console.log(newAppendRow);
             const updatedRows = [...data, newAppendRow ]
             
