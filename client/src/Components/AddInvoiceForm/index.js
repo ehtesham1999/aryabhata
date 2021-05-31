@@ -19,6 +19,8 @@ import DateFnsUtils from "@date-io/date-fns";
 // import Intrastate_Taxrates from './Intrastate_Taxrates';
 
 import Notification from '../Notification';
+import AddInvoiceTable from '../invoiceTable';
+
 
 import AddIcon from '@material-ui/icons/Add';
 import { Formik, Form, Field } from 'formik';
@@ -280,9 +282,9 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                 )}
             </Formik>
 
-            <h1>
-                code for that table goes here
-             </h1>
+            
+            <AddInvoiceTable></AddInvoiceTable>
+                
             {/* <Notification
                 notify={notify}
                 setNotify={setNotify}

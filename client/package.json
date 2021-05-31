@@ -17,6 +17,7 @@
     "formik-material-ui": "^3.0.1",
     "formik-material-ui-lab": "0.0.8",
     "i": "^0.3.6",
+    "material-table": "^1.69.3",
     "node-sass": "^5.0.0",
     "npm": "^7.15.0",
     "react": "^17.0.2",
