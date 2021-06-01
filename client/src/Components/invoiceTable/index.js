@@ -19,7 +19,7 @@ const itemList = [
 
   
 
-const AddInvoiceTable = () => {
+const AddInvoiceTable = ({setProductsData}) => {
 
   const [item_data, setItemData] = useState([])
     
@@ -58,8 +58,15 @@ const AddInvoiceTable = () => {
         value={itemName}
         onChange={(event, newValue) => {
 
-            setItemName(newValue.name);
+          if(newValue!==null)  {
+            setItemName(newValue.name)
             setRate(newValue.selling_price)
+            setTaxType(newValue.tax_preference)
+          }
+         
+
+          
+            
         }}
         options={item_data}
         getOptionLabel= {(option) => option.name?option.name : ""}
@@ -88,17 +95,24 @@ const AddInvoiceTable = () => {
         />
       ) },
     { title: "Tax", field: "tax", editComponent: () => (
-        <Autocomplete
-        id="tax_box"
+        // <Autocomplete
+        // id="tax_box"
+        // value={taxType}
+        // onChange={(event, newValue) => {
+        //     setTaxType(newValue.tax_preference);
+        // }}
+        // options={item_data}
+        // getOptionLabel= {(option) => option.tax_preference ? option.tax_preference : ""}
+        // style={{ width: 300 }}
+        // renderInput={(params) => <TextField {...params} label="Tax Type" variant="outlined" />}
+        // />
+        <TextField
         value={taxType}
-        onChange={(event, newValue) => {
-            setTaxType(newValue.tax_preference);
-        }}
-        options={item_data}
-        getOptionLabel= {(option) => option.tax_preference ? option.tax_preference : ""}
-        style={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Tax Type" variant="outlined" />}
-        />
+      //   onChange={(event, newValue) => {
+      //     setRate(newValue);
+      // }}
+        type="text"
+      />
       ) },
     { title: "Amount", field: "amt", editComponent: () => (
         <TextField
@@ -131,9 +145,11 @@ const AddInvoiceTable = () => {
             let newAppendRow = { id: Math.floor(Math.random() * 100) , item_name : itemToAdd, rate : rateToAdd , amt : amountToAdd ,tax: taxToAdd ,qty: quantityToAdd , ...newRow }
             console.log(newAppendRow);
             const updatedRows = [...data, newAppendRow ]
+
             
             setTimeout(() => {
               setData(updatedRows)
+              setProductsData(updatedRows)
               resolve()
             }, 2000)
           }),
@@ -143,6 +159,7 @@ const AddInvoiceTable = () => {
             updatedRows.splice(index, 1)
             setTimeout(() => {
               setData(updatedRows)
+              setProductsData(updatedRows)
               resolve()
             }, 2000)
           }),
@@ -152,6 +169,7 @@ const AddInvoiceTable = () => {
             updatedRows[index]=updatedRow
             setTimeout(() => {
               setData(updatedRows)
+              setProductsData(updatedRows)
               resolve()
             }, 2000)
           })

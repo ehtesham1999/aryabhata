@@ -48,6 +48,9 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
     const [addbutton_disabled, enable_addbutton] = useState(false)
     const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
 
+
+    const[products_data,setProductsData]=useState([])
+
     const [customer_data, setCustomerData] = useState([])
     const history = useHistory();
     editRecordData = null;
@@ -83,6 +86,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
         invoice_date: editRecordData ? editRecordData.invoice_date : new Date(),
         invoice_terms: editRecordData ? editRecordData.invoice_terms : '',
         invoice_due_date: editRecordData ? editRecordData.invoice_due_date : new Date(),
+        items: editRecordData ? editRecordData.items : [],
 
 
 
@@ -108,7 +112,9 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                     setTimeout(() => {
                         setSubmitting(false);
                         resetForm();
+                        values.items=[...products_data]
                         alert(JSON.stringify(values, null, 2))
+                        console.log(JSON.stringify(values, null, 2))
 
                         // if (values.action === 'Add') {
                         //     axios({
@@ -299,7 +305,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
             </Formik>
 
             
-            <AddInvoiceTable></AddInvoiceTable>
+            <AddInvoiceTable setProductsData={setProductsData} ></AddInvoiceTable>
                 
             {/* <Notification
                 notify={notify}
