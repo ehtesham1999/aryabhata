@@ -1,5 +1,6 @@
 .App {
     /* text-align: center; */
+
   }
   
   .App-logo {
@@ -35,4 +36,15 @@
     to {
       transform: rotate(360deg);
     }
+  }
+
+  .invoiceform{
+    display: flex;
+    flex-direction: column;
+    font-size:1.5rem;
+  }
+
+  .invoiceform > * {
+    margin:2rem 0;
+    /* width:40%; */
   }

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import './AddInvoiceForm.scss'
 import { fetchcustomernames } from '../../Api'
 
+import * as AiIcons from 'react-icons/ai'
+import * as BiIcons from 'react-icons/bi'
+
 import { useHistory } from 'react-router-dom';
 import {
     MuiPickersUtilsProvider,
@@ -35,9 +38,6 @@ import KeyboardBackspaceOutlinedIcon from '@material-ui/icons/KeyboardBackspaceO
 
 import axios from "axios";
 import { set } from 'mongoose';
-
-
-
 
 const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData }) => {
     const [sales_checked, setsales] = useState(true)
@@ -158,8 +158,8 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
             >
                 {({ submitForm, isSubmitting, touched, errors, setFieldValue, values }) => (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Form className='form-box'>
-                            <div className='form-box-col1'>
+                        <Form className='form_invoice-box'>
+                            <div className='form_invoice-box-col1'>
 
                                 <Button
                                     variant="contained"
@@ -198,8 +198,6 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     )}
                                 />
                                 <Button
-                                   
-                                
                                     variant="contained"
                                     color="primary"
                                     onClick={(e) => {
@@ -219,18 +217,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     inputProps={{ style: { fontSize: 20 } }}
                                     InputLabelProps={{ style: { fontSize: 20 } }}
                                 />
-
-                            
-
-                                
-
-
-                            </div>
-                            {isSubmitting && <LinearProgress />}
-
-                            <div className='form-box-col2'>
-
-                                <Field className='field'
+                                 <Field className='field'
                                     component={TextField}
                                     type="text"
                                     label="Invoice Number"
@@ -239,8 +226,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     inputProps={{ style: { fontSize: 20 } }}
                                     InputLabelProps={{ style: { fontSize: 20 } }}
                                 />
-
-                                <Field className='field'
+                                 <Field className='field'
                                     component={DatePicker}
                                     name="invoice_date"
                                     className='field'
@@ -249,7 +235,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     inputProps={{ style: { fontSize: 20 } }}
                                     InputLabelProps={{ style: { fontSize: 20 } }}
                                 />
-                                <Field className='field'
+                                     <Field className='field'
                                     component={DatePicker}
                                     name="invoice_due_date"
                                     label="Due Date"
@@ -258,7 +244,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     inputProps={{ style: { fontSize: 20 } }}
                                     InputLabelProps={{ style: { fontSize: 20 } }}
                                 />
-                                    <Field
+                                 <Field
                                     component={TextField}
                                     type="text"
                                     label='Terms'
@@ -275,14 +261,18 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     ))}
                                     </Field>
 
+                                  
+
                             </div>
-                            <div className='form-box-col3'>
+                            {isSubmitting && <LinearProgress />}
 
-
-                                <Button
+                            <div className='form_invoice-box-col2'>
+                             <AddInvoiceTable setProductsData={setProductsData}></AddInvoiceTable>
+                             <Button
                                     className={['field', 'button'].join('')}
                                     variant="contained"
                                     color="primary"
+                                    // style={{width:'40%'}}
                                     onClick={(e) => {
                                         submitForm()
                                         // setFieldValue("action", "Add")
@@ -294,10 +284,14 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     Add Invoice
                             </Button>
 
-
+                             
                             </div>
-                        </Form>
-                    </MuiPickersUtilsProvider>
+                            
+                        
+                
+                 </Form>
+
+                </MuiPickersUtilsProvider>
 
 
 
@@ -305,7 +299,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
             </Formik>
 
             
-            <AddInvoiceTable setProductsData={setProductsData} ></AddInvoiceTable>
+           
                 
             {/* <Notification
                 notify={notify}

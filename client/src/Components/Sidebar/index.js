@@ -31,7 +31,7 @@ justify-content:center;
 position:fixed;
 top:0;
 left:${({sidebar})=>(sidebar ? '0':'-100%')};
-z-index:10;
+z-index:20;
 transition:350ms;
 `
 
