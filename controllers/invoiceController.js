@@ -1,6 +1,7 @@
 //Import the library into your project
 var easyinvoice = require('easyinvoice');
 var fs = require('fs');
+const InvoiceModel = require("../models/invoiceModel");
  
 
 var data = {
@@ -61,17 +62,28 @@ var data = {
 //     // console.log(result.pdf);
 // });
 
-
-const getInvoice =  async (req, res) => {
-    try {
-        const result = await easyinvoice.createInvoice(data);
-        res.status(201).json(result);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-}
-
+   
 
 module.exports = {
-    getInvoice
-}
+    getInvoice :  async (req, res) => {
+        try {
+            const result = await easyinvoice.createInvoice(data);
+            res.status(201).json(result);
+        } catch (err) {
+          res.status(500).json({ message: err.message });
+        }
+    },
+
+    saveInvoice : async (req,res) =>{
+        try{
+            const newInvoice = new InvoiceModel(req.body);
+            const savedInvoice = await newInvoice.save();
+            res.status(201).json(savedInvoice);
+        }
+        catch(err){
+            res.status(400).json({ message: err.message });
+        }
+
+    }
+  };
+

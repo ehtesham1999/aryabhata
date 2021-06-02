@@ -47,7 +47,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
     const [isEditData, setIsEditData] = useState(false)
     const [addbutton_disabled, enable_addbutton] = useState(false)
     const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
-
+    const [customer_id , setCustomerId] = useState("")
 
     const[products_data,setProductsData]=useState([])
 
@@ -113,8 +113,24 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                         setSubmitting(false);
                         resetForm();
                         values.items=[...products_data]
+                        values.customer_id = customer_id;
+                        console.log('customer_id : '+customer_id);
                         alert(JSON.stringify(values, null, 2))
                         console.log(JSON.stringify(values, null, 2))
+
+                        axios({
+                            url: "http://localhost:5000/invoice/",
+                            method: "POST",
+                            data: values
+                        }).then(function (response) {
+                                console.log(response.data);
+                                console.log(response.status);
+                            }).catch((err) => (console.log(err)))
+                        setNotify({
+                            isOpen: true,
+                            message: "Invoice Added Successfully",
+                            type: 'success'
+                        })
 
                         // if (values.action === 'Add') {
                         //     axios({
@@ -181,8 +197,14 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     name="customer_name"
                                     component={Autocomplete}
                                     options={customer_data}
-                                    getOptionLabel={(option) => option}
-
+                                    getOptionLabel={(option) => option.name? option.name : ""}
+                                    onChange={(event, newValue) => {
+                                        if(newValue){
+                                            setCustomerId(newValue.customer_id);
+                                        }
+                                        
+                                      }
+                                      }
 
 
                                     renderInput={(params) => (

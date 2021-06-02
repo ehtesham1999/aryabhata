@@ -35,7 +35,8 @@ export const fetchcustomernames = async () => {
         console.log(data)
         const names=[]
         for(let i=0;i<data.data.length;i++){
-            names.push(data.data[i].display_name)
+            names.push({name : data.data[i].display_name , customer_id : data.data[i]._id }
+                )
         }
         return names;
     }

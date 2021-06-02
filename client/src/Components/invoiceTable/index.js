@@ -59,6 +59,7 @@ const AddInvoiceTable = ({ setProductsData }) => {
   const [discountType, setDiscountType] = useState('number');
   const [discountAmount, setDiscount] = useState(0);
   const [shippingCharges,setShippingCharges] = useState(0);
+  const [subTotal , setSubTotal] = useState(0);
 
 
 
@@ -82,7 +83,7 @@ const AddInvoiceTable = ({ setProductsData }) => {
           options={item_data}
           getOptionLabel={(option) => option.name ? option.name : ""}
           style={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Item Name" variant="outlined" />}
+          renderInput={(params) => <TextField {...params} label="Item Name"  variant="outlined" />}
         />
       )
     },
@@ -147,6 +148,19 @@ const AddInvoiceTable = ({ setProductsData }) => {
     }
   ]
 
+  function calculateTotal() {
+    let total = 0;
+    
+    if(discountType==='percentage')
+    {
+      total = subTotal-((subTotal*discountAmount)/100)+shippingCharges;
+    }else{
+      total = subTotal-discountAmount+shippingCharges;
+    }
+    
+    return total;
+  }
+
 
   return (
     <div className="App">
@@ -167,13 +181,19 @@ const AddInvoiceTable = ({ setProductsData }) => {
             let newAppendRow = { id: Math.floor(Math.random() * 100), item_name: itemToAdd, rate: rateToAdd, amt: amountToAdd, tax: taxToAdd, qty: quantityToAdd, ...newRow }
             console.log(newAppendRow);
             const updatedRows = [...data, newAppendRow]
+            let sub = 0;
+            updatedRows.forEach(row =>{
+              const rowamt = row.amt;
+              sub = sub + rowamt;
+            })
 
 
             setTimeout(() => {
               setData(updatedRows)
+              setSubTotal(sub);
               setProductsData(updatedRows)
               resolve()
-            }, 2000)
+            }, 500)
           }),
           onRowDelete: selectedRow => new Promise((resolve, reject) => {
             const index = selectedRow.tableData.id;
@@ -206,8 +226,8 @@ const AddInvoiceTable = ({ setProductsData }) => {
 
 
         <Grid container>
-          <Grid item><p>SubTotal:</p></Grid>
-          <Grid item><p>SubTotalamount</p></Grid>
+          <Grid item><p>SubTotal: </p></Grid>
+          <Grid item><p>{subTotal}</p></Grid>
         </Grid>
 
 
@@ -220,7 +240,8 @@ const AddInvoiceTable = ({ setProductsData }) => {
               type='number'
               label='Discount'
               InputLabelProps={{ style: { fontSize: 20 } }}
-              onChange={(e) => { setDiscount(e.target.value) }}
+              onChange={(e) => { setDiscount(e.target.value);
+              }}
             />
           </Grid>
           <Grid item alignItems="stretch" style={{ display: "flex" }} >
@@ -228,7 +249,8 @@ const AddInvoiceTable = ({ setProductsData }) => {
             
               value={discountType}
               select
-              onChange={(e) => { setDiscountType(e.target.value) }}
+              onChange={(e) => { setDiscountType(e.target.value) 
+              }}
             >
               <MenuItem key='1' value='percentage'>{<AiIcons.AiOutlinePercentage />}</MenuItem>
               <MenuItem key='2' value='number'>{<BiIcons.BiRupee />}</MenuItem>
@@ -242,7 +264,15 @@ const AddInvoiceTable = ({ setProductsData }) => {
           type='number'
           label='Shipping Charges'
           value={shippingCharges}
-          onChange={(e) => { setShippingCharges(e.target.value)}}
+          onChange={(e) => { 
+            if(e.target.value)
+            {
+              setShippingCharges(parseInt(e.target.value))
+            }
+            else{
+              setShippingCharges(0);
+            }
+          }}
           
           InputLabelProps={{ style: { fontSize: 20 } }}
           InputProps={{
@@ -251,14 +281,12 @@ const AddInvoiceTable = ({ setProductsData }) => {
           }}
         />
 
-          
         
 
-        
 
         <Grid container>
           <Grid item><p>Total:</p></Grid>
-          <Grid item><p>Totalamount</p></Grid>
+          <Grid item><p>{calculateTotal()}</p></Grid>
         </Grid>
 
 

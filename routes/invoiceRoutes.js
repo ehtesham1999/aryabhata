@@ -10,7 +10,7 @@ router.get('/', invoiceController.getInvoice);
 
 
 // Creating one
-// router.post('/', invoiceController.addCustomer);
+router.post('/', invoiceController.saveInvoice);
 
 
 module.exports = router;
