@@ -1,6 +1,7 @@
 //Import the library into your project
 var easyinvoice = require('easyinvoice');
 var fs = require('fs');
+const ObjectId = require("mongodb").ObjectID;
 const InvoiceModel = require("../models/invoiceModel");
  
 
@@ -65,7 +66,7 @@ var data = {
    
 
 module.exports = {
-    getInvoice :  async (req, res) => {
+    getPdfInvoice :  async (req, res) => {
         try {
             const result = await easyinvoice.createInvoice(data);
             res.status(201).json(result);
@@ -94,5 +95,63 @@ module.exports = {
       res.status(500).json({ message: err.message });
     }
   },
+  updateInvoice : async (req, res) => {
+    try {
+      const updatedInvoice = await InvoiceModel.findOneAndUpdate(
+        {
+          _id: req.params.id,
+        },
+        {
+          $set: req.body,
+        },
+        {
+          new: true,
+          useFindAndModify: false,
+        }
+      );
+      res.status(201).json(updatedInvoice);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+
+  patchInvoice: async (req, res) => {
+    try {
+      const updateObject = req.body; 
+      const id = req.params.id;
+      const updatedInvoice = await InvoiceModel.updateOne(
+          {_id: ObjectId(id)},
+          {$set: updateObject},
+      );
+      res.status(201).json(updatedInvoice);
+    } catch (err) {
+      res.status(400).json({message: err.message});
+    }
+  },
+
+  deleteInvoice: async (req, res) => {
+    try {
+      await res.invoice.remove();
+      res.status(200).json({ message: "Deleted Invoice" });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  },
+
+  getInvoice: async (req, res, next) => {
+    let invoice;
+    try {
+      invoice = await InvoiceModel.findById(req.params.id);
+      if (invoice == null) {
+        return res.status(404).json({ message: "Cannot find Invoice" });
+      }
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+
+    res.invoice = invoice;
+    next();
+  },
+
   };
 
