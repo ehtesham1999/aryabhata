@@ -113,8 +113,8 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                         setSubmitting(false);
                         resetForm();
                         values.items=[...products_data]
-                        values.customer_id = customer_id;
-                        console.log('customer_id : '+customer_id);
+                        // values.customer_id = customer_id;
+                        // console.log('customer_id : '+customer_id);
                         alert(JSON.stringify(values, null, 2))
                         console.log(JSON.stringify(values, null, 2))
 
@@ -197,14 +197,8 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     name="customer_name"
                                     component={Autocomplete}
                                     options={customer_data}
-                                    getOptionLabel={(option) => option.name? option.name : ""}
-                                    onChange={(event, newValue) => {
-                                        if(newValue){
-                                            setCustomerId(newValue.customer_id);
-                                        }
-                                        
-                                      }
-                                      }
+                                    getOptionLabel={(option) => option ? option : ""}
+                                  
 
 
                                     renderInput={(params) => (

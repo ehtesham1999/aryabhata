@@ -50,16 +50,28 @@ const AddInvoiceTable = ({ setProductsData }) => {
 
   const [data, setData] = useState(itemList);
 
+  const[table_data,setTableData]=useState({
+    itemName:'',
+    itemQuantity:0,
+    discountType:'number',
+    discountAmount:0,
+    shippingCharges:0,
+    subTotal:0,
+    itemData:{}
+  })
 
-  const [itemName, setItemName] = useState("");
-  const [taxType, setTaxType] = useState("");
-  const [itemAmount, setAmount] = useState(0);
-  const [itemRate, setRate] = useState(0);
-  const [itemQuantity, setQuantity] = useState(0);
-  const [discountType, setDiscountType] = useState('number');
-  const [discountAmount, setDiscount] = useState(0);
-  const [shippingCharges,setShippingCharges] = useState(0);
-  const [subTotal , setSubTotal] = useState(0);
+ 
+
+
+  // const [itemName, setItemName] = useState(null);
+  // const [taxType, setTaxType] = useState("");
+  // const [itemAmount, setAmount] = useState(0);
+  // const [itemRate, setRate] = useState(0);
+  // const [itemQuantity, setQuantity] = useState(0);
+  // const [discountType, setDiscountType] = useState('number');
+  // const [discountAmount, setDiscount] = useState(0);
+  // const [shippingCharges,setShippingCharges] = useState(0);
+  // const [subTotal , setSubTotal] = useState(0);
 
 
 
@@ -69,19 +81,33 @@ const AddInvoiceTable = ({ setProductsData }) => {
       title: "Item Details", field: "item_name", editComponent: () => (
         <Autocomplete
           id="item_box"
-          value={itemName}
           onChange={(event, newValue) => {
+            console.log(newValue);
+            
+            setTableData((prev_value) => (
+              {...prev_value,
+                itemData:newValue
+              }))
+         
+            console.log(table_data)
+            
+           
+        }}
+        
+        options={item_data}
+        getOptionLabel={(option) => option.name ? option.name : ""}
+        getOptionSelected={(option, value) => option.name === value.name }
+        value={table_data.itemData}
+        onInputChange={(event, inputValue)=>{
+          console.log(inputValue)
+          setTableData((prev_value)=> ({
+            ...prev_value,
+            itemName:inputValue,
+          }))
 
-            if (newValue !== null) {
-              setItemName(newValue.name)
-              setRate(newValue.selling_price)
-              setTaxType(newValue.tax_preference)
-            }
-
-
-          }}
-          options={item_data}
-          getOptionLabel={(option) => option.name ? option.name : ""}
+          console.log(table_data)
+        }}
+        inputValue={table_data.itemName}
           style={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="Item Name"  variant="outlined" />}
         />
@@ -90,23 +116,35 @@ const AddInvoiceTable = ({ setProductsData }) => {
     {
       title: "Quantity", field: "qty", editComponent: () => (
         <TextField
-          value={itemQuantity}
+          value={table_data.itemQuantity}
+          InputProps={{
+            inputProps: { 
+                 min:0
+            }
+        }}
           onChange={(event, newValue) => {
-            setQuantity(event.target.value);
+            // setQuantity(event.target.value);
             console.log('Quantity: ' + event.target.value);
-            setAmount(itemRate * event.target.value);
+            // setAmount(itemRate * event.target.value);
+            setTableData((prev_value) => ({
+              ...prev_value,
+              itemQuantity:event.target.value,
+            }))
+            console.log(table_data)
           }}
-          type="numeric"
+          type="number"
+          min="0"
         />
       )
     },
     {
       title: "Rate", field: 'rate', editComponent: () => (
         <TextField
-          value={itemRate}
+          value={table_data.itemData.selling_price ? table_data.itemData.selling_price: 0}
           //   onChange={(event, newValue) => {
           //     setRate(newValue);
           // }}
+          disabled
           type="numeric"
         />
       )
@@ -125,7 +163,7 @@ const AddInvoiceTable = ({ setProductsData }) => {
         // renderInput={(params) => <TextField {...params} label="Tax Type" variant="outlined" />}
         // />
         <TextField
-          value={taxType}
+          value={table_data.itemData.tax_preference ? table_data.itemData.tax_preference: 0}
           disabled
           //   onChange={(event, newValue) => {
           //     setRate(newValue);
@@ -137,11 +175,7 @@ const AddInvoiceTable = ({ setProductsData }) => {
     {
       title: "Amount", field: "amt", editComponent: () => (
         <TextField
-          value={itemAmount}
-          onChange={(event, newValue) => {
-            setAmount(newValue);
-          }
-          }
+          value={table_data.itemData.selling_price ? table_data.itemData.selling_price*table_data.itemQuantity:0}
           type="numeric"
         />
       )
@@ -151,11 +185,11 @@ const AddInvoiceTable = ({ setProductsData }) => {
   function calculateTotal() {
     let total = 0;
     
-    if(discountType==='percentage')
+    if(table_data.discountType==='percentage')
     {
-      total = subTotal-((subTotal*discountAmount)/100)+shippingCharges;
+      total = table_data.subTotal-((table_data.subTotal*table_data.discountAmount)/100)+table_data.shippingCharges;
     }else{
-      total = subTotal-discountAmount+shippingCharges;
+      total = table_data.subTotal-table_data.discountAmount+table_data.shippingCharges;
     }
     
     return total;
@@ -172,11 +206,11 @@ const AddInvoiceTable = ({ setProductsData }) => {
         columns={columns}
         editable={{
           onRowAdd: (newRow) => new Promise((resolve, reject) => {
-            const itemToAdd = itemName;
-            const rateToAdd = itemRate;
-            const taxToAdd = taxType;
-            const amountToAdd = itemQuantity * rateToAdd;
-            const quantityToAdd = itemQuantity;
+            const itemToAdd = table_data.itemName;
+            const rateToAdd = table_data.itemData.selling_price;
+            const taxToAdd = table_data.itemData.tax_preference;
+            const amountToAdd = table_data.itemQuantity * rateToAdd;
+            const quantityToAdd = table_data.itemQuantity;
 
             let newAppendRow = { id: Math.floor(Math.random() * 100), item_name: itemToAdd, rate: rateToAdd, amt: amountToAdd, tax: taxToAdd, qty: quantityToAdd, ...newRow }
             console.log(newAppendRow);
@@ -190,7 +224,11 @@ const AddInvoiceTable = ({ setProductsData }) => {
 
             setTimeout(() => {
               setData(updatedRows)
-              setSubTotal(sub);
+              // setSubTotal(sub);
+              setTableData((prev_value)=> ({
+                ...prev_value,
+                subTotal: sub
+              }))
               setProductsData(updatedRows)
               resolve()
             }, 500)
@@ -206,6 +244,8 @@ const AddInvoiceTable = ({ setProductsData }) => {
             }, 2000)
           }),
           onRowUpdate: (updatedRow, oldRow) => new Promise((resolve, reject) => {
+            console.log(updatedRow)
+            console.log(oldRow)
             const index = oldRow.tableData.id;
             const updatedRows = [...data]
             updatedRows[index] = updatedRow
@@ -224,10 +264,9 @@ const AddInvoiceTable = ({ setProductsData }) => {
 
       <div className='invoiceform'>
 
-
         <Grid container>
           <Grid item><p>SubTotal: </p></Grid>
-          <Grid item><p>{subTotal}</p></Grid>
+          <Grid item><p>{table_data.subTotal}</p></Grid>
         </Grid>
 
 
@@ -236,20 +275,30 @@ const AddInvoiceTable = ({ setProductsData }) => {
             <TextField
               variant="standard"
        
-              value={discountAmount}
+              value={table_data.discountAmount}
               type='number'
               label='Discount'
               InputLabelProps={{ style: { fontSize: 20 } }}
-              onChange={(e) => { setDiscount(e.target.value);
-              }}
+
+              onChange={(e) => {
+                setTableData((prev_value)=>({
+                  ...prev_value,
+                  discountAmount:e.target.value
+                }))
+             }}
+             
             />
           </Grid>
           <Grid item alignItems="stretch" style={{ display: "flex" }} >
             <Select
             
-              value={discountType}
+              value={table_data.discountType}
               select
-              onChange={(e) => { setDiscountType(e.target.value) 
+              onChange={(e) => {
+                 setTableData((prev_value)=>({
+                   ...prev_value,
+                   discountType:e.target.value
+                 }))
               }}
             >
               <MenuItem key='1' value='percentage'>{<AiIcons.AiOutlinePercentage />}</MenuItem>
@@ -263,14 +312,22 @@ const AddInvoiceTable = ({ setProductsData }) => {
           variant='standard'
           type='number'
           label='Shipping Charges'
-          value={shippingCharges}
+          value={table_data.shippingCharges}
           onChange={(e) => { 
             if(e.target.value)
             {
-              setShippingCharges(parseInt(e.target.value))
+              // setShippingCharges(parseInt(e.target.value))
+              setTableData((prev_value)=> ({
+                ...prev_value,
+                shippingCharges:parseInt(e.target.value)
+              }))
             }
             else{
-              setShippingCharges(0);
+              // setShippingCharges(0);
+              setTableData((prev_value)=> ({
+                ...prev_value,
+                shippingCharges:0
+              }))
             }
           }}
           
