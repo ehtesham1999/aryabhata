@@ -74,7 +74,7 @@ module.exports = {
         }
     },
 
-    saveInvoice : async (req,res) =>{
+    addInvoice : async (req,res) =>{
         try{
             const newInvoice = new InvoiceModel(req.body);
             const savedInvoice = await newInvoice.save();
@@ -84,6 +84,15 @@ module.exports = {
             res.status(400).json({ message: err.message });
         }
 
+    },
+    getAllInvoices : async (req, res) => {
+    try {
+      const invoices = await InvoiceModel.find();
+      console.log(invoices);
+      res.status(201).json(invoices);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
     }
+  },
   };
 

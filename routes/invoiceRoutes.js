@@ -5,12 +5,15 @@ const router = express.Router();
 const invoiceController = require("../controllers/invoiceController");
 
 
-// Getting all
-router.get('/', invoiceController.getInvoice);
+// Getting invoice as pdf
+router.get('/pdf', invoiceController.getInvoice);
+
+// Getting all invoice
+router.get('/', invoiceController.getAllInvoices);
 
 
 // Creating one
-router.post('/', invoiceController.saveInvoice);
+router.post('/', invoiceController.addInvoice);
 
 
 module.exports = router;
