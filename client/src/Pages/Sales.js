@@ -6,7 +6,7 @@ import AddcustomerForm from '../Components/AddcustomerForm'
 import AddInvoiceForm from '../Components/AddInvoiceForm'
 
 import UseTable from '../Components/UseTable';
-import { fetchcustomerdata } from '../Api';
+import { fetchcustomerdata,fetchinvoicedata } from '../Api';
 import '../Pages/PageStyle.scss';
 
 
@@ -238,10 +238,205 @@ export const AddCustomer = () => {
 
 export const AddInvoice = () => {
 
-    return (
-       
-        <AddInvoiceForm />
+    const classes = useStyles();
+    const [InvoiceData, setInvoiceData] = useState([])
+    const [Value, setValue] = useState()
+    const [filterFn, setFilterFn] = useState({ fn: items => { return items; } })
+    const [addinvoice_toggle,setAddInvoice_toggle]=useState(false)
+    const [recordEdit,setrecordEdit]=useState(null)
+    const [confirmDialog,setConfirmDialog]=useState({isOpen:false,title:'',subTitle:''})
+    const [notify,setNotify] = useState({isOpen:false,message:'',type:''})
+    
+    const history = useHistory();
+
+    const fetchAPI = async () => {
+        setInvoiceData(await fetchinvoicedata());
         
+    }
+  
+    useEffect(() => {
+        fetchAPI();
+    }, []);
+    
+    const handleDelete = (id) => {
+        setConfirmDialog({
+            ...confirmDialog,
+            isOpen: false,
+        })
+            axios({
+                url:"http://localhost:5000/invoice/" + id,
+                method:"DELETE",
+            })
+            .then(function(response) {
+                console.log(response.data);
+                console.log(response.status);
+                
+                axios({
+                    url:"http://localhost:5000/invoice/",
+                    method:"GET"
+                })
+                .then((res)=>{setInvoiceData(res.data)})
+              })
+            .catch((err)=>(console.log(err)))
+
+            
+
+            setNotify({
+                isOpen:true,
+                message:"Deleted Successfully",
+                type:'error'
+            })
+        }
+
+
+
+
+    const headCells = [
+        // disableSorting:true
+        { id: 'invoice_date', label: 'DATE' },
+        { id: 'invoice_number', label: 'INVOICE#' },
+        { id: 'order_number', label: 'ORDER NUMBER' },
+        { id: 'customer_name', label: 'CUSTOMER NAME',},
+        { id: 'due_date', label: 'DUE DATE' },
+        { id: 'amount', label: 'AMOUNT' },
+        {id:'actions',label:'ACTIONS'}
+        
+    ]
+
+
+    const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } = UseTable(InvoiceData, headCells, filterFn);
+
+    const handleSearch = (e) => {
+        let target = e.target.value;
+        console.log(target)
+        setValue(target)
+        setFilterFn({
+            fn: items => {
+                if (target.value == "") {
+                    return items;
+                }
+
+                else {
+                    console.log(items.filter(x => x.customer_name.includes('a')))
+                    return items.filter(x => x.customer_name.toLowerCase().includes(target));
+                }
+
+            }
+        })
+    }
+    const handleAddInvoice = () => {
+        setAddInvoice_toggle((prev_value)=>(!prev_value))
+    }
+    const handleEdit = (item) => {
+        setrecordEdit(item)
+        setAddInvoice_toggle((prev_value)=>(!prev_value))
+    }
+
+    return (
+        <>
+        {addinvoice_toggle ? <AddInvoiceForm editRecordData={recordEdit} handleAddInvoiceToggle={setAddInvoice_toggle} updateInvoiceData={setInvoiceData} /> 
+            :
+            <div className='Table'>
+                <div className='Table-head'>
+                <TextField
+                    className={classes.searchInput}
+                    variant='outlined'
+                    label='Search Invoice'
+                    value={Value}
+                    InputProps={{
+                        startAdornment: (<InputAdornment position='start'><Search /></InputAdornment>)
+                    }}
+                    onChange={handleSearch}
+                />
+                <Button 
+                variant="contained" 
+                color="primary"
+                startIcon={<AddIcon/>}
+                onClick={handleAddInvoice}>
+                
+                Add Invoice 
+                </Button>
+                
+                </div>
+                    
+                <TblContainer>
+                    <TblHead />
+                    <TableBody>
+                        {
+                            recordsAfterPagingAndSorting().map((item,index) => (
+                                <>
+                                {console.log(item)}
+                            
+
+                                
+                                
+                                <TableRow key={index}>
+                                    <TableCell >{item.invoice_date} </TableCell>
+                                    <TableCell>{item.invoice_number}</TableCell>
+                                    <TableCell>{item.order_number}</TableCell>
+                                    <TableCell>{item.customer_details.name}</TableCell>
+                                    <TableCell>{item.invoice_due_date}</TableCell>
+                                    <TableCell>{item.total}</TableCell>
+                                    <TableCell>
+
+                                        <Controls.ActionButton
+                                        color="primary"
+                                        >
+                                        <EditOutlinedIcon fontSize="small"
+                                         onClick={()=>{handleEdit(item)}}
+                                        
+                                        />
+                                        </Controls.ActionButton>
+
+                                        <Controls.ActionButton
+                                        color="secondary"
+                                        >
+                                        <DeleteIcon fontSize="small"
+                                        onClick={()=>{
+                                            
+                                            setConfirmDialog({
+                                                isOpen:true,
+                                                title:'Are you sure to delete this record?',
+                                                subTitle:" You can't undo this operation",
+                                                onConfirm:()=>{handleDelete(item._id)}
+                                            })
+                                        }}
+                                        />
+                                        </Controls.ActionButton>
+
+
+                                        {/* <Controls.ActionButton color="primary">
+                                            <VisibilityIcon fontSize="small"
+                                            onClick={()=>{
+                                                let path = `/sales/customer/overview/${item._id}`;
+                                                history.push(path); 
+                                            }}
+                                            />
+
+                                        </Controls.ActionButton> */}
+
+                                    </TableCell>
+                                </TableRow>
+                                </>
+                            ))
+                        }
+                    </TableBody>
+                </TblContainer>
+                <TblPagination />
+                <ConfirmDialog
+                confirmDialog={confirmDialog}
+                setConfirmDialog={setConfirmDialog}
+                ></ConfirmDialog>
+            <Notification
+            notify={notify}
+            setNotify={setNotify}
+            >
+            </Notification>           
+            </div>
+
+    }
+        </>
+
     )
 }
   

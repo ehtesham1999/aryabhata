@@ -8,11 +8,16 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Icons from './tableIcons';
 import { setQuarter } from 'date-fns';
 import { fetchdata } from '../../Api'
-import { MenuItem, Select } from '@material-ui/core';
+import { MenuItem, Select,Button } from '@material-ui/core';
 import * as AiIcons from 'react-icons/ai'
 import * as BiIcons from 'react-icons/bi'
-
+import Notification from '../Notification';
 import InputAdornment from '@material-ui/core/InputAdornment';
+ import axios from "axios";
+
+ import { useFormikContext } from 'formik';
+
+
 
 
 
@@ -24,13 +29,19 @@ const itemList = [
 
 
 
+const AddInvoiceTable = ({hi,setFieldValue}) => {
 
-
-const AddInvoiceTable = ({ setProductsData }) => {
+  const { submitForm } = useFormikContext();
+  const handleSubmit = () => {
+    setFieldValue('items',data)
+    setFieldValue('total',table_data.finalTotal)
+   
+    submitForm();
+  }
+      // {console.log(hi)}
 
   const [item_data, setItemData] = useState([])
-
-  const fetchAPI = async () => {
+  const fetchAPI2 = async () => {
     await fetchdata().then(
       (data) => {
         setItemData(data);
@@ -38,17 +49,9 @@ const AddInvoiceTable = ({ setProductsData }) => {
         console.log(data);
       }
     );
-
-
+  
+  
   }
-
-  useEffect(() => {
-    fetchAPI()
-  }, []);
-
-
-
-  const [data, setData] = useState(itemList);
 
   const[table_data,setTableData]=useState({
     itemName:'',
@@ -59,6 +62,23 @@ const AddInvoiceTable = ({ setProductsData }) => {
     subTotal:0,
     itemData:{}
   })
+
+  useEffect(() => {
+    fetchAPI2()
+  }, []);
+
+  useEffect(() => {
+    calculateTotal()
+  },[table_data.shippingCharges,table_data.discountAmount,table_data.discountType,table_data.subTotal])
+
+
+
+  const [data, setData] = useState(itemList);
+  // const [ total,setTotal]=useState(0);
+
+ 
+
+  // const [notify, setNotify] = useState({ isOpen: false, message: '', type: '' })
 
  
 
@@ -184,15 +204,27 @@ const AddInvoiceTable = ({ setProductsData }) => {
 
   function calculateTotal() {
     let total = 0;
-    
-    if(table_data.discountType==='percentage')
-    {
-      total = table_data.subTotal-((table_data.subTotal*table_data.discountAmount)/100)+table_data.shippingCharges;
-    }else{
-      total = table_data.subTotal-table_data.discountAmount+table_data.shippingCharges;
+
+    if(table_data.subTotal!==0 || table_data.shippingCharges!==0 || table_data.discountAmount!==0){
+      if(table_data.discountType==='percentage')
+      {
+        total = table_data.subTotal-((table_data.subTotal*table_data.discountAmount)/100)+table_data.shippingCharges;
+      }else{
+        total = table_data.subTotal-table_data.discountAmount+table_data.shippingCharges;
+    }
+    setTableData((prev_value)=>({
+      ...prev_value,
+      finalTotal:total,
+    }))
+       
     }
     
-    return total;
+   
+    // setTotal(total)
+    // setFieldValue('total',total)
+  
+    
+    // return total;
   }
 
 
@@ -203,6 +235,7 @@ const AddInvoiceTable = ({ setProductsData }) => {
         icons={Icons}
         title="Add Items"
         data={data}
+
         columns={columns}
         editable={{
           onRowAdd: (newRow) => new Promise((resolve, reject) => {
@@ -229,7 +262,7 @@ const AddInvoiceTable = ({ setProductsData }) => {
                 ...prev_value,
                 subTotal: sub
               }))
-              setProductsData(updatedRows)
+              // setProductsData(updatedRows)
               resolve()
             }, 500)
           }),
@@ -239,7 +272,7 @@ const AddInvoiceTable = ({ setProductsData }) => {
             updatedRows.splice(index, 1)
             setTimeout(() => {
               setData(updatedRows)
-              setProductsData(updatedRows)
+              // setProductsData(updatedRows)
               resolve()
             }, 2000)
           }),
@@ -251,7 +284,7 @@ const AddInvoiceTable = ({ setProductsData }) => {
             updatedRows[index] = updatedRow
             setTimeout(() => {
               setData(updatedRows)
-              setProductsData(updatedRows)
+              // setProductsData(updatedRows)
               resolve()
             }, 2000)
           })
@@ -328,6 +361,7 @@ const AddInvoiceTable = ({ setProductsData }) => {
                 ...prev_value,
                 shippingCharges:0
               }))
+
             }
           }}
           
@@ -343,12 +377,35 @@ const AddInvoiceTable = ({ setProductsData }) => {
 
         <Grid container>
           <Grid item><p>Total:</p></Grid>
-          <Grid item><p>{calculateTotal()}</p></Grid>
+         
+          <Grid item><p> {table_data.finalTotal}</p></Grid>
         </Grid>
+
+        <Grid container>
+
+        <Button
+                                    className={['field', 'button'].join('')}
+                                    variant="contained"
+                                    color="primary"
+                                    // style={{width:'40%'}}
+                                    onClick={(e) => {handleSubmit()}}
+                                      
+                                    // disabled={isSubmitting}
+                                    inputProps={{ style: { fontSize: 22 } }}
+                                    InputLabelProps={{ style: { fontSize: 22 } }}
+                                >
+                                    Add Invoice
+                            </Button> 
+                            </Grid>
 
 
 
       </div>
+      {/* <Notification
+                notify={notify}
+                setNotify={setNotify}
+            >
+            </Notification> */}
 
     </div>
   );

@@ -2,6 +2,7 @@ import axios from "axios";
 
 const url = "http://localhost:5000/items/";
 const url2="http://localhost:5000/customers/";
+const url3="http://localhost:5000/invoice/";
 
 export const fetchdata = async () => {
     try{
@@ -28,6 +29,17 @@ export const fetchcustomerdata = async () => {
     }
 
 }
+export const fetchinvoicedata = async () => {
+    try{
+        const data=await axios.get(url3)
+        // console.log(data)
+        return data.data
+    }
+    catch(error){
+        console.log(error)
+    }
+
+}
 
 export const fetchcustomernames = async () => {
     try{
@@ -35,7 +47,7 @@ export const fetchcustomernames = async () => {
         console.log(data)
         const names=[]
         for(let i=0;i<data.data.length;i++){
-            names.push( data.data[i].display_name)
+            names.push({name:data.data[i].display_name,id:data.data[i]._id})
         }
         return names;
     }

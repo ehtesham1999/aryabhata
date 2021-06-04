@@ -39,7 +39,7 @@ import KeyboardBackspaceOutlinedIcon from '@material-ui/icons/KeyboardBackspaceO
 import axios from "axios";
 import { set } from 'mongoose';
 
-const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData }) => {
+const AddInvoiceForm = ({ editRecordData, handleAddInvoiceToggle, updateInvoiceData }) => {
     const [sales_checked, setsales] = useState(true)
     const [purchase_checked, setpurchase] = useState(true)
     const [track_inventory_checked, settrackinventory] = useState(false)
@@ -52,6 +52,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
     const[products_data,setProductsData]=useState([])
 
     const [customer_data, setCustomerData] = useState([])
+    // const [total,setTotal] = useState(0)
     const history = useHistory();
     editRecordData = null;
 
@@ -79,18 +80,14 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
 
 
     var initialValues = {
-
-        customer_name: editRecordData ? editRecordData.customer_name : '',
+        customer_details: editRecordData ? editRecordData.customer_details : {},
         invoice_number: editRecordData ? editRecordData.invoice_number : '',
         order_number: editRecordData ? editRecordData.order_number : '',
         invoice_date: editRecordData ? editRecordData.invoice_date : new Date(),
         invoice_terms: editRecordData ? editRecordData.invoice_terms : '',
         invoice_due_date: editRecordData ? editRecordData.invoice_due_date : new Date(),
         items: editRecordData ? editRecordData.items : [],
-
-
-
-
+        total: editRecordData ? editRecordData.total :0,
         // editRecord_id: editRecordData ? editRecordData._id : '',
         // action: null
     }
@@ -108,11 +105,13 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
 
                     return errors;
                 }}
-                onSubmit={(values, { setSubmitting, resetForm }) => {
+                onSubmit={(values, { setSubmitting, resetForm,item_data }) => {
+                    {console.log(item_data)}
                     setTimeout(() => {
                         setSubmitting(false);
                         resetForm();
-                        values.items=[...products_data]
+                        // values.items=[...products_data]
+                        // values.invoice_amount= total
                         // values.customer_id = customer_id;
                         // console.log('customer_id : '+customer_id);
                         alert(JSON.stringify(values, null, 2))
@@ -172,7 +171,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                     // setOpenPopUp(true)
                 }}
             >
-                {({ submitForm, isSubmitting, touched, errors, setFieldValue, values }) => (
+                {({ submitForm, isSubmitting, touched, errors, setFieldValue, values,formik }) => (
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Form className='form_invoice-box'>
                             <div className='form_invoice-box-col1'>
@@ -181,26 +180,30 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     variant="contained"
                                     className='margin-bottom'
                                     color="secondary"
-                                // onClick={() => {
-                                //     handleAdditemToggle((prev_value) => (!prev_value))
-                                //     axios({
-                                //         url: "http://localhost:5000/items/",
-                                //         method: "GET"
-                                //     })
-                                //         .then((res) => { updateProductData(res.data) })
-                                //         .catch((err) => (console.log(err)))
-                                // }}
+                                onClick={() => {
+                                    handleAddInvoiceToggle((prev_value) => (!prev_value))
+                                    axios({
+                                        url: "http://localhost:5000/invoice/",
+                                        method: "GET"
+                                    })
+                                        .then((res) => { updateInvoiceData(res.data) })
+                                        .catch((err) => (console.log(err)))
+                                }}
                                 > <KeyboardBackspaceOutlinedIcon /> Back</Button>
 
                                 <Field
                                     
-                                    name="customer_name"
+                                    name="customer_details"
                                     component={Autocomplete}
+                                    autocomplete
                                     options={customer_data}
-                                    getOptionLabel={(option) => option ? option : ""}
-                                  
-
-
+                                    getOptionLabel={(option) => option.name ? option.name : ""}
+                                    groupBy={(options) =>{
+                                        setFieldValue=('customer_id',options.id)
+                                        return null;
+                                    }}
+                                    
+                                
                                     renderInput={(params) => (
 
                                         <TF {...params} 
@@ -227,7 +230,6 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
 
                                 <Field className='field'
                                     component={TextField}
-                                    type="text"
                                     label="Order Number"
                                     name="order_number"
                                     inputProps={{ style: { fontSize: 20 } }}
@@ -235,17 +237,15 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                 />
                                  <Field className='field'
                                     component={TextField}
-                                    type="text"
+                                    
                                     label="Invoice Number"
-                                    name="invoice_number"
-                                    className='field'
+                                    name="invoice_number"  
                                     inputProps={{ style: { fontSize: 20 } }}
                                     InputLabelProps={{ style: { fontSize: 20 } }}
                                 />
                                  <Field className='field'
                                     component={DatePicker}
                                     name="invoice_date"
-                                    className='field'
                                     label="Invoice Date"
                                     minDate={new Date()}
                                     inputProps={{ style: { fontSize: 20 } }}
@@ -283,8 +283,8 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                             {isSubmitting && <LinearProgress />}
 
                             <div className='form_invoice-box-col2'>
-                             <AddInvoiceTable setProductsData={setProductsData}></AddInvoiceTable>
-                             <Button
+                             <AddInvoiceTable hi={values} setFieldValue={setFieldValue} ></AddInvoiceTable>
+                             {/* <Button
                                     className={['field', 'button'].join('')}
                                     variant="contained"
                                     color="primary"
@@ -298,7 +298,7 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
                                     InputLabelProps={{ style: { fontSize: 22 } }}
                                 >
                                     Add Invoice
-                            </Button>
+                            </Button> */}
 
                              
                             </div>
@@ -317,11 +317,11 @@ const AddInvoiceForm = ({ editRecordData, handleAdditemToggle, updateProductData
             
            
                 
-            {/* <Notification
+            <Notification
                 notify={notify}
                 setNotify={setNotify}
             >
-            </Notification> */}
+            </Notification>
 
         </>
     )
