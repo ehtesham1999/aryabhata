@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const url = "http://localhost:5000/items/";
-const url2="http://localhost:5000/customers/";
-const url3="http://localhost:5000/invoice/";
+const url = `http://localhost:${process.env.PORT}/items/`;
+const url2= `http://localhost:${process.env.PORT}/customers/`;
+const url3= `http://localhost:${process.env.PORT}/invoice/`;
 
 export const fetchdata = async () => {
     try{
@@ -60,7 +60,7 @@ export const fetchcustomernames = async () => {
 export const fetchitem = async (id) => {
     try{
         console.log(id)
-        let fetchurl =`http://localhost:5000/items/${id}`
+        let fetchurl =`http://localhost:${process.env.PORT}/items/${id}`
         const data=await axios.get(fetchurl)
         console.log(data.data)
         return data.data
@@ -74,7 +74,7 @@ export const fetchitem = async (id) => {
 export const fetchcustomer = async (id) => {
     try{
         console.log(id)
-        let fetchurl =`http://localhost:5000/customers/${id}`
+        let fetchurl =`http://localhost:${process.env.PORT}/customers/${id}`
         const data=await axios.get(fetchurl)
         console.log(data.data)
         return data.data
