@@ -17,7 +17,7 @@ const connection = async () => {
     'mongodb+srv://admin_ehte:test@cluster0.tmjbb.mongodb.net/test?retryWrites=true&w=majority';
 
   try {
-    await mongoose.connect(url, options);
+    await mongoose.connect(process.env.MONGODB_URI, options);
     console.log('DB Connected Successfully');
   } catch (error) {
     console.log('DB Connection Failed');
@@ -42,11 +42,11 @@ app.use('/items/', itemRoutes);
 app.use('/customers/', customerRoutes);
 app.use('/invoice/', invoiceRoutes);
 
-app.use(express.static("client/build"));
-// if(process.env.NODE_ENV === 'production')
-// {
-//   app.use(express.static("client/build"));
-// }
+// app.use(express.static("client/build"));
+if(process.env.NODE_ENV === 'production')
+{
+  app.use(express.static("client/build"));
+}
 
 // app.use(express.static(path.join(__dirname, "/client/build")));
 // app.get("*", (req, res) => {
