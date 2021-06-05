@@ -42,6 +42,11 @@ app.use('/items/', itemRoutes);
 app.use('/customers/', customerRoutes);
 app.use('/invoice/', invoiceRoutes);
 
+app.use(express.static("client/build"));
+// if(process.env.NODE_ENV === 'production')
+// {
+//   app.use(express.static("client/build"));
+// }
 
 // app.use(express.static(path.join(__dirname, "/client/build")));
 // app.get("*", (req, res) => {
