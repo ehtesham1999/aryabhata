@@ -116,9 +116,9 @@ const AddInvoiceForm = ({ editRecordData, handleAddInvoiceToggle, updateInvoiceD
                         // console.log('customer_id : '+customer_id);
                         alert(JSON.stringify(values, null, 2))
                         console.log(JSON.stringify(values, null, 2))
-
+                       
                         axios({
-                            url: "http://localhost:5000/invoice/",
+                            url: `http://localhost:${process.env.PORT}/invoice/`,
                             method: "POST",
                             data: values
                         }).then(function (response) {
@@ -183,7 +183,7 @@ const AddInvoiceForm = ({ editRecordData, handleAddInvoiceToggle, updateInvoiceD
                                 onClick={() => {
                                     handleAddInvoiceToggle((prev_value) => (!prev_value))
                                     axios({
-                                        url: "http://localhost:5000/invoice/",
+                                        url:  `http://localhost:${process.env.PORT}/invoice/`,
                                         method: "GET"
                                     })
                                         .then((res) => { updateInvoiceData(res.data) })

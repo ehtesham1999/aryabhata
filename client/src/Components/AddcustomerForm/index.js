@@ -160,7 +160,7 @@ const AddcustomerForm = ({ editRecordData, handleAddCustomerToggle, updateCustom
 
                         if (values.action === 'Add') {
                             axios({
-                                url: "http://localhost:5000/customers/",
+                                url: `http://localhost:${process.env.PORT}/customers/`,
                                 method: "POST",
                                 data: values
                             })
@@ -178,7 +178,7 @@ const AddcustomerForm = ({ editRecordData, handleAddCustomerToggle, updateCustom
                         }
                         else {
                             axios({
-                                url: "http://localhost:5000/customers/" + values.editRecord_id,
+                                url: `http://localhost:${process.env.PORT}/customers/` + values.editRecord_id,
                                 method: "PUT",
                                 data: values
                             })
@@ -204,14 +204,14 @@ const AddcustomerForm = ({ editRecordData, handleAddCustomerToggle, updateCustom
                     <Form className='form'>
                         <div className='form-box'>
                             <div className='form-box-col1'>
-
+                            
                                 <Button
                                     variant="contained"
                                     color="secondary"
                                     onClick={() => {
                                         handleAddCustomerToggle((prev_value) => (!prev_value))
                                         axios({
-                                            url: "http://localhost:5000/customers/",
+                                            url: `http://localhost:${process.env.PORT}/customers/`,
                                             method: "GET"
                                         })
                                             .then((res) => { updateCustomerData(res.data) })
